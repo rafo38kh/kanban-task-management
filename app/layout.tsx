@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
+import { ThemeContextProvider } from "@/contexts/ThemeContextProvider";
+import TopNavigation from "@/components/TopNavigation";
+import SideNavigation from "@/components/SideNavigation";
+
 const plus_Jakarta_Sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["500", "700"],
@@ -19,9 +23,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-medium ${plus_Jakarta_Sans.className}`}>
-        {children}
-      </body>
+      <ThemeContextProvider>
+        <body
+          className={`dark:bg-kanbanDarkGreyBG bg-kanbanLightGreyBG font-medium${plus_Jakarta_Sans.className}`}
+        >
+          <div>
+            <TopNavigation />
+            <SideNavigation />
+          </div>
+          {children}
+        </body>
+      </ThemeContextProvider>
     </html>
   );
 }

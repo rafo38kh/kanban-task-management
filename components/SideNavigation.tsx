@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import { createPortal } from "react-dom";
+
 import SwitchTheme from "./SwitchTheme";
 
 export default function SideNavigation() {
@@ -8,8 +10,8 @@ export default function SideNavigation() {
     { boardName: "Marketing Plan" },
     { boardName: "Roadmap" },
   ];
-  return (
-    <div className="absolute left-14 top-20 flex w-[16.5rem] flex-col items-center justify-start rounded-lg bg-white p-4 pl-0 dark:bg-kanbanGrey">
+  return createPortal(
+    <div className="absolute left-14 top-20 z-50 flex w-[16.5rem] flex-col items-center justify-start rounded-lg bg-white p-4 pl-0 dark:bg-kanbanGrey">
       <div>
         <div className="flex items-center justify-start gap-2 p-4 pt-2 font-bold tracking-widest text-kanbanLightGrey">
           <span className="uppercase ">All boards</span>
@@ -52,6 +54,7 @@ export default function SideNavigation() {
       <div className="ml-4 w-full rounded-lg bg-kanbanVeryLightGrey px-6 py-2 text-center dark:bg-kanbanDarkGreyBG">
         <SwitchTheme />
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

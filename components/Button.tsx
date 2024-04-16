@@ -17,7 +17,7 @@ export default function Button({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full rounded-full bg-kanbanPurpule p-2 ${bgColor} ${textColor}`}
+      className={`w-full rounded-full bg-kanbanPurpule p-2 text-[13px] font-bold ${bgColor} ${textColor}`}
     >
       {text}
     </button>

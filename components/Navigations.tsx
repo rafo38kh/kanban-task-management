@@ -4,8 +4,6 @@ import { useState } from "react";
 import TopNavigation from "@/components/TopNavigation";
 import SideNavigation from "@/components/SideNavigation";
 
-import React from "react";
-
 export default function Navigations() {
   const [isSideBarshow, setIsSideBarShow] = useState(false);
 
@@ -15,7 +13,12 @@ export default function Navigations() {
         setIsSideBarShow={setIsSideBarShow}
         isSideBarshow={isSideBarshow}
       />
-      {isSideBarshow && <SideNavigation />}
+
+      {isSideBarshow && (
+        <div className="md:revert fixed z-50 min-h-screen w-full bg-black/80">
+          <SideNavigation />
+        </div>
+      )}
     </div>
   );
 }

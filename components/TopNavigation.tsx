@@ -1,5 +1,7 @@
 "use client";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import ModalWrapper from "./ModalWrapper";
+import ModalTaskInformation from "./ModalTaskInformation";
 
 type TopNavigationProps = {
   setIsSideBarShow: Dispatch<SetStateAction<boolean>>;
@@ -10,6 +12,14 @@ export default function TopNavigation({
   setIsSideBarShow,
   isSideBarshow,
 }: TopNavigationProps) {
+  const [isAddNewTaskModalOpen, setIsAddNewTaskModalOpen] = useState(false);
+
+  const handleAddNewTask = () => {
+    setIsAddNewTaskModalOpen(true);
+  };
+
+  console.log(isAddNewTaskModalOpen);
+
   return (
     <div className="flex w-full items-center justify-between bg-kanbanVeryLightGrey p-4 dark:bg-kanbanDarkGrey">
       <div className="start flex w-full items-center justify-start gap-4">
@@ -51,6 +61,7 @@ export default function TopNavigation({
         <button
           type="button"
           className="rounded-full bg-kanbanPurpule p-2 px-4"
+          onClick={handleAddNewTask}
         >
           <svg width="12" height="12" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -69,6 +80,11 @@ export default function TopNavigation({
           </svg>
         </button>
       </div>
+      {isAddNewTaskModalOpen && (
+        <ModalWrapper>
+          <ModalTaskInformation />
+        </ModalWrapper>
+      )}
     </div>
   );
 }

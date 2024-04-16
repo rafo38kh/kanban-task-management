@@ -25,8 +25,10 @@ export default function RootLayout({
       <body
         className={`relative h-screen bg-kanbanLightGreyBG dark:bg-kanbanDarkGreyBG font-medium${plus_Jakarta_Sans.className}`}
       >
-        <Navigations />
-        <Providers>{children}</Providers>
+        <Providers>
+          <Navigations />
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-import { ThemeContextProvider } from "@/contexts/ThemeContextProvider";
-import TopNavigation from "@/components/TopNavigation";
-import SideNavigation from "@/components/SideNavigation";
+import Providers from "@/components/Providers";
+import Navigations from "@/components/Navigations";
 
 const plus_Jakarta_Sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -23,17 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ThemeContextProvider>
-        <body
-          className={`dark:bg-kanbanDarkGreyBG bg-kanbanLightGreyBG font-medium${plus_Jakarta_Sans.className}`}
-        >
-          <div>
-            <TopNavigation />
-            <SideNavigation />
-          </div>
-          {children}
-        </body>
-      </ThemeContextProvider>
+      <body
+        className={`relative h-screen bg-kanbanLightGreyBG dark:bg-kanbanDarkGreyBG font-medium${plus_Jakarta_Sans.className}`}
+      >
+        <Navigations />
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

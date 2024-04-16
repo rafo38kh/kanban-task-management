@@ -1,3 +1,9 @@
+import EmptyBoard from "@/components/EmptyBoard";
+
 export default function Home() {
-  return <h1>Hello</h1>;
+  return (
+    <div className="flex h-[calc(100%_-_60px)] w-full flex-col items-center justify-center">
+      <EmptyBoard />
+    </div>
+  );
 }

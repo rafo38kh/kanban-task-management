@@ -1,40 +1,33 @@
 "use client";
-import { StatesContext } from "../contexts/StatesContextProvider";
 
-import { useContext } from "react";
+type SubModalEditDeleteBtnsProps = {
+  handleEditModal: () => void;
+  handleDeletModal: () => void;
+  firstTextBtn: string;
+  secondTextBtn: string;
+};
 
-export default function SubModalEditDeleteBtns() {
-  const {
-    setIsEditTaskModalOpen,
-    setIsDeletTaskModalOpen,
-    setIsMainChangesModalOpen,
-  } = useContext(StatesContext);
-
-  const handleEditTaskModal = () => {
-    setIsMainChangesModalOpen(false);
-    setIsEditTaskModalOpen(true);
-  };
-
-  const handleDeletTaskModal = () => {
-    setIsMainChangesModalOpen(false);
-    setIsDeletTaskModalOpen(true);
-  };
-
+export default function SubModalEditDeleteBtns({
+  handleEditModal,
+  handleDeletModal,
+  firstTextBtn,
+  secondTextBtn,
+}: SubModalEditDeleteBtnsProps) {
   return (
     <div className="absolute right-5 top-52 flex w-40 flex-col items-start justify-center gap-2 rounded-lg bg-white p-4 dark:bg-kanbanDarkGreyBG">
       <button
-        onClick={handleEditTaskModal}
+        onClick={handleEditModal}
         type="button"
         className="text-sm font-bold text-kanbanLightGrey"
       >
-        Edit Task
+        {firstTextBtn}
       </button>
       <button
-        onClick={handleDeletTaskModal}
+        onClick={handleDeletModal}
         type="button"
         className="text-sm font-bold text-kanbanRed"
       >
-        Delete Task
+        {secondTextBtn}
       </button>
     </div>
   );

@@ -10,11 +10,18 @@ import ModalTaskInformation from "./ModalTaskInformation";
 
 export default function EmptyBoard() {
   const {
+    isDeletTaskModalOpen,
     isAddNewBoardModalOpen,
     isEditTaskModalOpen,
-    isDeletTaskModalOpen,
     isMainChangesModalOpen,
+    isEditBoardModalOpen,
+    setIsEditBoardModalOpen,
+    isDeletBoardModalOpen,
   } = useContext(StatesContext);
+
+  const handleAddNewColumn = () => {
+    setIsEditBoardModalOpen(true);
+  };
 
   return (
     <div className="flex max-w-64 flex-col items-center justify-center gap-8 text-center text-kanbanLightGrey">
@@ -24,9 +31,7 @@ export default function EmptyBoard() {
         text={"+ Add New Column"}
         bgColor={"bg-kanbanPurpule"}
         margin={""}
-        onClick={() => {
-          console.log("+ Add New Column");
-        }}
+        onClick={handleAddNewColumn}
       />
       {isAddNewBoardModalOpen && (
         <ModalWrapper>
@@ -54,9 +59,27 @@ export default function EmptyBoard() {
           />
         </ModalWrapper>
       )}
+
+      {isDeletBoardModalOpen && (
+        <ModalWrapper>
+          <ModalDelateInformation
+            boardType={"Delete this board?"}
+            buttonText={""}
+          />
+        </ModalWrapper>
+      )}
+
       {isMainChangesModalOpen && (
         <ModalWrapper>
           <ModalMainChanges />
+        </ModalWrapper>
+      )}
+      {isEditBoardModalOpen && (
+        <ModalWrapper>
+          <ModalBoardInformation
+            boardType={"Edit Board"}
+            buttonText={"Save Changes"}
+          />
         </ModalWrapper>
       )}
     </div>

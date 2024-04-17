@@ -67,14 +67,6 @@ export default function SideNavigation() {
       <div className="ml-4 w-full rounded-lg bg-kanbanVeryLightGrey px-6 py-2 text-center dark:bg-kanbanDarkGreyBG">
         <SwitchTheme />
       </div>
-      {/* {isAddNewBoardModalOpen && (
-        <ModalWrapper>
-          <ModalBoardInformation
-            boardType={"Add New Board"}
-            buttonText={"Create New Board"}
-          />
-        </ModalWrapper>
-      )} */}
     </div>,
     document.body,
   );

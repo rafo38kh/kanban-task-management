@@ -4,10 +4,29 @@ import { useContext } from "react";
 import SubModalEditDeleteBtns from "./SubModalEditDeleteBtns";
 
 export default function ModalMainChanges() {
-  const { isEditDeleteBtns, setIsEditDeleteBtns } = useContext(StatesContext);
+  const {
+    isEditDeleteBtns,
+    setIsEditDeleteBtns,
+    setIsEditTaskModalOpen,
+    isDeletTaskModalOpen,
+    setIsDeletTaskModalOpen,
+    setIsMainChangesModalOpen,
+  } = useContext(StatesContext);
 
-  const handleopenEditDeleteBtns = () => {
+  const handleOpenEditDeleteTaskBtns = () => {
     setIsEditDeleteBtns((prevState) => !prevState);
+  };
+
+  const handleEditTaskModal = () => {
+    // setIsEditDeleteBtns(false);
+    setIsMainChangesModalOpen(false);
+    setIsEditTaskModalOpen(true);
+  };
+
+  const handleDeletTaskModal = () => {
+    // setIsEditDeleteBtns(false);
+    setIsMainChangesModalOpen(false);
+    setIsDeletTaskModalOpen(true);
   };
 
   return (
@@ -20,7 +39,7 @@ export default function ModalMainChanges() {
         <button
           type="button"
           className="relative"
-          onClick={handleopenEditDeleteBtns}
+          onClick={handleOpenEditDeleteTaskBtns}
         >
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
             <g fill="#828FA3" fillRule="evenodd">
@@ -63,7 +82,14 @@ export default function ModalMainChanges() {
           placeholder="Doing"
         />
       </div>
-      {isEditDeleteBtns && <SubModalEditDeleteBtns />}
+      {isEditDeleteBtns && (
+        <SubModalEditDeleteBtns
+          handleEditModal={handleEditTaskModal}
+          handleDeletModal={handleDeletTaskModal}
+          firstTextBtn={"Edit Task"}
+          secondTextBtn={"Delete Task"}
+        />
+      )}
     </>
   );
 }

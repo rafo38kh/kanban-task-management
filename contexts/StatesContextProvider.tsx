@@ -23,6 +23,12 @@ type StatesContext = {
   setIsDeletTaskModalOpen: Dispatch<SetStateAction<boolean>>;
   isMainChangesModalOpen: boolean;
   setIsMainChangesModalOpen: Dispatch<SetStateAction<boolean>>;
+  isEditBoardModalOpen: boolean;
+  setIsEditBoardModalOpen: Dispatch<SetStateAction<boolean>>;
+  isEditDeletBoardModal: boolean;
+  setIsEditDeletBoardModal: Dispatch<SetStateAction<boolean>>;
+  isDeletBoardModalOpen: boolean;
+  setIsDeletBoardModalOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export const StatesContext = createContext<StatesContext>({
@@ -40,6 +46,12 @@ export const StatesContext = createContext<StatesContext>({
   setIsDeletTaskModalOpen: () => {},
   isMainChangesModalOpen: false,
   setIsMainChangesModalOpen: () => {},
+  isEditBoardModalOpen: false,
+  setIsEditBoardModalOpen: () => {},
+  isEditDeletBoardModal: false,
+  setIsEditDeletBoardModal: () => {},
+  isDeletBoardModalOpen: false,
+  setIsDeletBoardModalOpen: () => {},
 });
 
 type StatesContextProvider = { children: ReactNode | ReactNode[] };
@@ -48,9 +60,12 @@ const StatesContextProvider = ({ children }: StatesContextProvider) => {
   const [isEditDeleteBtns, setIsEditDeleteBtns] = useState(false);
   const [isSideBarshow, setIsSideBarShow] = useState(false);
   const [isAddNewBoardModalOpen, setIsAddNewBoardModalOpen] = useState(false);
+  const [isEditBoardModalOpen, setIsEditBoardModalOpen] = useState(false);
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   const [isAddNewTaskModalOpen, setIsAddNewTaskModalOpen] = useState(false);
   const [isDeletTaskModalOpen, setIsDeletTaskModalOpen] = useState(false);
+  const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
+  const [isDeletBoardModalOpen, setIsDeletBoardModalOpen] = useState(false);
   const [isMainChangesModalOpen, setIsMainChangesModalOpen] = useState(false);
 
   const value = useMemo(
@@ -69,6 +84,12 @@ const StatesContextProvider = ({ children }: StatesContextProvider) => {
       setIsDeletTaskModalOpen,
       isMainChangesModalOpen,
       setIsMainChangesModalOpen,
+      isEditBoardModalOpen,
+      setIsEditBoardModalOpen,
+      isEditDeletBoardModal,
+      setIsEditDeletBoardModal,
+      isDeletBoardModalOpen,
+      setIsDeletBoardModalOpen,
     }),
     [
       isEditDeleteBtns,
@@ -85,6 +106,12 @@ const StatesContextProvider = ({ children }: StatesContextProvider) => {
       setIsDeletTaskModalOpen,
       isMainChangesModalOpen,
       setIsMainChangesModalOpen,
+      isEditBoardModalOpen,
+      setIsEditBoardModalOpen,
+      isEditDeletBoardModal,
+      setIsEditDeletBoardModal,
+      isDeletBoardModalOpen,
+      setIsDeletBoardModalOpen,
     ],
   );
   return (

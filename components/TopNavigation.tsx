@@ -4,6 +4,8 @@ import { StatesContext } from "../contexts/StatesContextProvider";
 
 import ModalWrapper from "./ModalWrapper";
 import ModalTaskInformation from "./ModalTaskInformation";
+import SubModalEditDeleteBtns from "./SubModalEditDeleteBtns";
+import ModalDelateInformation from "./ModalDelateInformation";
 
 type TopNavigationProps = {
   setIsSideBarShow: Dispatch<SetStateAction<boolean>>;
@@ -14,11 +16,33 @@ export default function TopNavigation({
   setIsSideBarShow,
   isSideBarshow,
 }: TopNavigationProps) {
-  const { isAddNewTaskModalOpen, setIsAddNewTaskModalOpen } =
-    useContext(StatesContext);
+  const {
+    isAddNewTaskModalOpen,
+    setIsAddNewTaskModalOpen,
+    isEditDeletBoardModal,
+    setIsEditDeletBoardModal,
+    isEditBoardModalOpen,
+    setIsEditBoardModalOpen,
+    isDeletBoardModalOpen,
+    setIsDeletBoardModalOpen,
+  } = useContext(StatesContext);
 
   const handleAddNewTask = () => {
     setIsAddNewTaskModalOpen(true);
+  };
+
+  const handleOpenEditDeleteBoardBtns = () => {
+    setIsEditDeletBoardModal((prevState) => !prevState);
+  };
+
+  const handleEditBoardModal = () => {
+    setIsEditDeletBoardModal(false);
+    setIsEditBoardModalOpen(true);
+  };
+
+  const handleDeletBoardModal = () => {
+    setIsEditDeletBoardModal(false);
+    setIsDeletBoardModalOpen(true);
   };
 
   return (
@@ -71,7 +95,7 @@ export default function TopNavigation({
             />
           </svg>
         </button>
-        <button>
+        <button type="button" onClick={handleOpenEditDeleteBoardBtns}>
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
             <g fill="#828FA3" fillRule="evenodd">
               <circle cx="2.308" cy="2.308" r="2.308" />
@@ -81,11 +105,27 @@ export default function TopNavigation({
           </svg>
         </button>
       </div>
+      {isEditDeletBoardModal && (
+        <SubModalEditDeleteBtns
+          handleEditModal={handleEditBoardModal}
+          handleDeletModal={handleDeletBoardModal}
+          firstTextBtn={"Edit Board"}
+          secondTextBtn={"Delete Board"}
+        />
+      )}
       {isAddNewTaskModalOpen && (
         <ModalWrapper>
           <ModalTaskInformation
             boardType={"Add New Task"}
             buttonText={"Create Task"}
+          />
+        </ModalWrapper>
+      )}
+      {isEditBoardModalOpen && (
+        <ModalWrapper>
+          <ModalDelateInformation
+            boardType={"Delete this board?"}
+            buttonText={""}
           />
         </ModalWrapper>
       )}

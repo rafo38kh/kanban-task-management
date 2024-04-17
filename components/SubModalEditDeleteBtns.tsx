@@ -1,5 +1,8 @@
 "use client";
 
+import { StatesContext } from "@/contexts/StatesContextProvider";
+import { useContext } from "react";
+
 type SubModalEditDeleteBtnsProps = {
   handleEditModal: () => void;
   handleDeletModal: () => void;
@@ -13,11 +16,21 @@ export default function SubModalEditDeleteBtns({
   firstTextBtn,
   secondTextBtn,
 }: SubModalEditDeleteBtnsProps) {
+  const { subModalCordinats } = useContext(StatesContext);
+
+  const rect = subModalCordinats?.getBoundingClientRect() as DOMRect;
+
   return (
-    <div className="absolute right-5 top-52 flex w-40 flex-col items-start justify-center gap-2 rounded-lg bg-white p-4 dark:bg-kanbanDarkGreyBG">
+    <div
+      style={{
+        top: rect?.y + rect?.height + 10,
+        right: rect.x - rect.right + 10,
+      }}
+      className="fixed  right-0 top-0 flex w-40 flex-col items-start justify-center gap-2 rounded-lg bg-white p-4 dark:bg-kanbanDarkGreyBG"
+    >
       <button
-        onClick={handleEditModal}
         type="button"
+        onClick={handleEditModal}
         className="text-sm font-bold text-kanbanLightGrey"
       >
         {firstTextBtn}

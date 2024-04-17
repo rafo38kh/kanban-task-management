@@ -1,5 +1,11 @@
 "use client";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+  Dispatch,
+  MouseEvent,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 import { StatesContext } from "../contexts/StatesContextProvider";
 
 import ModalWrapper from "./ModalWrapper";
@@ -23,16 +29,17 @@ export default function TopNavigation({
     setIsEditDeletBoardModal,
     isEditBoardModalOpen,
     setIsEditBoardModalOpen,
-    isDeletBoardModalOpen,
     setIsDeletBoardModalOpen,
+    setSubModalCordinats,
   } = useContext(StatesContext);
 
   const handleAddNewTask = () => {
     setIsAddNewTaskModalOpen(true);
   };
 
-  const handleOpenEditDeleteBoardBtns = () => {
+  const handleOpenEditDeleteBoardBtns = (e: MouseEvent) => {
     setIsEditDeletBoardModal((prevState) => !prevState);
+    setSubModalCordinats(e.target as HTMLElement);
   };
 
   const handleEditBoardModal = () => {
@@ -95,7 +102,7 @@ export default function TopNavigation({
             />
           </svg>
         </button>
-        <button type="button" onClick={handleOpenEditDeleteBoardBtns}>
+        <button type="button" onClick={(e) => handleOpenEditDeleteBoardBtns(e)}>
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
             <g fill="#828FA3" fillRule="evenodd">
               <circle cx="2.308" cy="2.308" r="2.308" />

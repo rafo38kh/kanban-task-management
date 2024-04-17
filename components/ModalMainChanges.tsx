@@ -1,6 +1,6 @@
 "use client";
+import { MouseEvent, useContext } from "react";
 import { StatesContext } from "../contexts/StatesContextProvider";
-import { useContext } from "react";
 import SubModalEditDeleteBtns from "./SubModalEditDeleteBtns";
 
 export default function ModalMainChanges() {
@@ -11,10 +11,12 @@ export default function ModalMainChanges() {
     isDeletTaskModalOpen,
     setIsDeletTaskModalOpen,
     setIsMainChangesModalOpen,
+    setSubModalCordinats,
   } = useContext(StatesContext);
 
-  const handleOpenEditDeleteTaskBtns = () => {
+  const handleOpenEditDeleteTaskBtns = (e: MouseEvent) => {
     setIsEditDeleteBtns((prevState) => !prevState);
+    setSubModalCordinats(e.target as HTMLElement);
   };
 
   const handleEditTaskModal = () => {
@@ -30,17 +32,13 @@ export default function ModalMainChanges() {
   };
 
   return (
-    <>
+    <div className="relative">
       <div className="flex flex-row items-center justify-between gap-4">
         <h1 className=" text-xl font-bold ">
           Research pricing points of various competitors and trial different
           business models
         </h1>
-        <button
-          type="button"
-          className="relative"
-          onClick={handleOpenEditDeleteTaskBtns}
-        >
+        <button type="button" onClick={(e) => handleOpenEditDeleteTaskBtns(e)}>
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
             <g fill="#828FA3" fillRule="evenodd">
               <circle cx="2.308" cy="2.308" r="2.308" />
@@ -90,6 +88,6 @@ export default function ModalMainChanges() {
           secondTextBtn={"Delete Task"}
         />
       )}
-    </>
+    </div>
   );
 }

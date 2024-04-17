@@ -1,12 +1,24 @@
 "use client";
 import {
-  createContext,
   useState,
   useMemo,
-  ReactNode,
   Dispatch,
+  ReactNode,
+  createContext,
   SetStateAction,
 } from "react";
+
+enum ModalTypes {
+  Main = "main_modal",
+  NewTask = "new_task",
+  SubTask = "sub_task",
+  SubBoard = "sub_board",
+  EditTask = "edit_task",
+  NewBoard = "new_board",
+  EditBoard = "edit_board",
+  DeleteTask = "delete_task",
+  DeleteBoard = "delete_board",
+}
 
 type StatesContext = {
   isEditDeleteBtns: boolean;
@@ -29,6 +41,8 @@ type StatesContext = {
   setIsEditDeletBoardModal: Dispatch<SetStateAction<boolean>>;
   isDeletBoardModalOpen: boolean;
   setIsDeletBoardModalOpen: Dispatch<SetStateAction<boolean>>;
+  subModalCordinats: HTMLElement | null;
+  setSubModalCordinats: Dispatch<SetStateAction<HTMLElement | null>>;
 };
 
 export const StatesContext = createContext<StatesContext>({
@@ -52,6 +66,8 @@ export const StatesContext = createContext<StatesContext>({
   setIsEditDeletBoardModal: () => {},
   isDeletBoardModalOpen: false,
   setIsDeletBoardModalOpen: () => {},
+  subModalCordinats: null,
+  setSubModalCordinats: () => {},
 });
 
 type StatesContextProvider = { children: ReactNode | ReactNode[] };
@@ -66,7 +82,9 @@ const StatesContextProvider = ({ children }: StatesContextProvider) => {
   const [isDeletTaskModalOpen, setIsDeletTaskModalOpen] = useState(false);
   const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
   const [isDeletBoardModalOpen, setIsDeletBoardModalOpen] = useState(false);
-  const [isMainChangesModalOpen, setIsMainChangesModalOpen] = useState(false);
+  const [isMainChangesModalOpen, setIsMainChangesModalOpen] = useState(true);
+  const [subModalCordinats, setSubModalCordinats] =
+    useState<HTMLElement | null>(null);
 
   const value = useMemo(
     () => ({
@@ -90,6 +108,8 @@ const StatesContextProvider = ({ children }: StatesContextProvider) => {
       setIsEditDeletBoardModal,
       isDeletBoardModalOpen,
       setIsDeletBoardModalOpen,
+      subModalCordinats,
+      setSubModalCordinats,
     }),
     [
       isEditDeleteBtns,
@@ -112,6 +132,8 @@ const StatesContextProvider = ({ children }: StatesContextProvider) => {
       setIsEditDeletBoardModal,
       isDeletBoardModalOpen,
       setIsDeletBoardModalOpen,
+      subModalCordinats,
+      setSubModalCordinats,
     ],
   );
   return (

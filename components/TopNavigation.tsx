@@ -6,12 +6,8 @@ import {
   useContext,
   useState,
 } from "react";
-import { StatesContext } from "../contexts/StatesContextProvider";
-
-import ModalWrapper from "./ModalWrapper";
-import ModalTaskInformation from "./ModalTaskInformation";
-import SubModalEditDeleteBtns from "./SubModalEditDeleteBtns";
-import ModalDelateInformation from "./ModalDelateInformation";
+import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
+import SubModal from "./Modals/SubModal";
 
 type TopNavigationProps = {
   setIsSideBarShow: Dispatch<SetStateAction<boolean>>;
@@ -22,34 +18,31 @@ export default function TopNavigation({
   setIsSideBarShow,
   isSideBarshow,
 }: TopNavigationProps) {
-  const {
-    isAddNewTaskModalOpen,
-    setIsAddNewTaskModalOpen,
-    isEditDeletBoardModal,
-    setIsEditDeletBoardModal,
-    isEditBoardModalOpen,
-    setIsEditBoardModalOpen,
-    setIsDeletBoardModalOpen,
-    setSubModalCordinats,
-  } = useContext(StatesContext);
+  const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
+
+  const { setModalType, setIsModalOpen, setClickTarget } =
+    useContext(ModalContext);
 
   const handleAddNewTask = () => {
-    setIsAddNewTaskModalOpen(true);
+    setIsModalOpen(true);
+    setModalType(ModalTypes.NewTask);
   };
 
   const handleOpenEditDeleteBoardBtns = (e: MouseEvent) => {
     setIsEditDeletBoardModal((prevState) => !prevState);
-    setSubModalCordinats(e.target as HTMLElement);
+    setClickTarget(e.target as HTMLElement);
   };
 
   const handleEditBoardModal = () => {
     setIsEditDeletBoardModal(false);
-    setIsEditBoardModalOpen(true);
+    setIsModalOpen(true);
+    setModalType(ModalTypes.EditBoard);
   };
 
   const handleDeletBoardModal = () => {
     setIsEditDeletBoardModal(false);
-    setIsDeletBoardModalOpen(true);
+    setIsModalOpen(true);
+    setModalType(ModalTypes.DeleteBoard);
   };
 
   return (
@@ -102,6 +95,7 @@ export default function TopNavigation({
             />
           </svg>
         </button>
+
         <button type="button" onClick={(e) => handleOpenEditDeleteBoardBtns(e)}>
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
             <g fill="#828FA3" fillRule="evenodd">
@@ -113,28 +107,12 @@ export default function TopNavigation({
         </button>
       </div>
       {isEditDeletBoardModal && (
-        <SubModalEditDeleteBtns
+        <SubModal
           handleEditModal={handleEditBoardModal}
           handleDeletModal={handleDeletBoardModal}
           firstTextBtn={"Edit Board"}
           secondTextBtn={"Delete Board"}
         />
-      )}
-      {isAddNewTaskModalOpen && (
-        <ModalWrapper>
-          <ModalTaskInformation
-            boardType={"Add New Task"}
-            buttonText={"Create Task"}
-          />
-        </ModalWrapper>
-      )}
-      {isEditBoardModalOpen && (
-        <ModalWrapper>
-          <ModalDelateInformation
-            boardType={"Delete this board?"}
-            buttonText={""}
-          />
-        </ModalWrapper>
       )}
     </div>
   );

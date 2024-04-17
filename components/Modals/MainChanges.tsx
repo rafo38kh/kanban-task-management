@@ -1,43 +1,40 @@
 "use client";
-import { MouseEvent, useContext } from "react";
-import { StatesContext } from "../contexts/StatesContextProvider";
-import SubModalEditDeleteBtns from "./SubModalEditDeleteBtns";
+import { MouseEvent, useContext, useState } from "react";
+import { ModalContext, ModalTypes } from "../../contexts/ModalContextProvider";
+import SubModal from "./SubModal";
 
-export default function ModalMainChanges() {
-  const {
-    isEditDeleteBtns,
-    setIsEditDeleteBtns,
-    setIsEditTaskModalOpen,
-    isDeletTaskModalOpen,
-    setIsDeletTaskModalOpen,
-    setIsMainChangesModalOpen,
-    setSubModalCordinats,
-  } = useContext(StatesContext);
+export default function MainChanges() {
+  const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
+
+  const { handleClose, setClickTarget, setModalType, setIsModalOpen } =
+    useContext(ModalContext);
 
   const handleOpenEditDeleteTaskBtns = (e: MouseEvent) => {
-    setIsEditDeleteBtns((prevState) => !prevState);
-    setSubModalCordinats(e.target as HTMLElement);
+    setIsEditDeletBoardModal((prevState) => !prevState);
+    setClickTarget(e.target as HTMLElement);
   };
 
   const handleEditTaskModal = () => {
-    // setIsEditDeleteBtns(false);
-    setIsMainChangesModalOpen(false);
-    setIsEditTaskModalOpen(true);
+    setIsEditDeletBoardModal(false);
+    setIsModalOpen(true);
+    setModalType(ModalTypes.EditTask);
   };
 
   const handleDeletTaskModal = () => {
-    // setIsEditDeleteBtns(false);
-    setIsMainChangesModalOpen(false);
-    setIsDeletTaskModalOpen(true);
+    setIsEditDeletBoardModal(false);
+    setIsModalOpen(true);
+    setModalType(ModalTypes.DeleteTask);
   };
 
   return (
     <div className="relative">
+      <button onClick={handleClose}>close</button>
       <div className="flex flex-row items-center justify-between gap-4">
         <h1 className=" text-xl font-bold ">
           Research pricing points of various competitors and trial different
           business models
         </h1>
+
         <button type="button" onClick={(e) => handleOpenEditDeleteTaskBtns(e)}>
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
             <g fill="#828FA3" fillRule="evenodd">
@@ -80,8 +77,8 @@ export default function ModalMainChanges() {
           placeholder="Doing"
         />
       </div>
-      {isEditDeleteBtns && (
-        <SubModalEditDeleteBtns
+      {isEditDeletBoardModal && (
+        <SubModal
           handleEditModal={handleEditTaskModal}
           handleDeletModal={handleDeletTaskModal}
           firstTextBtn={"Edit Task"}

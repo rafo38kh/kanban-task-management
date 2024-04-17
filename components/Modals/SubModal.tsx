@@ -1,6 +1,6 @@
 "use client";
 
-import { StatesContext } from "@/contexts/StatesContextProvider";
+import { ModalContext } from "@/contexts/ModalContextProvider";
 import { useContext } from "react";
 
 type SubModalEditDeleteBtnsProps = {
@@ -10,15 +10,15 @@ type SubModalEditDeleteBtnsProps = {
   secondTextBtn: string;
 };
 
-export default function SubModalEditDeleteBtns({
+export default function SubModal({
   handleEditModal,
   handleDeletModal,
   firstTextBtn,
   secondTextBtn,
 }: SubModalEditDeleteBtnsProps) {
-  const { subModalCordinats } = useContext(StatesContext);
+  const { clickTarget } = useContext(ModalContext);
 
-  const rect = subModalCordinats?.getBoundingClientRect() as DOMRect;
+  const rect = clickTarget?.getBoundingClientRect() as DOMRect;
 
   return (
     <div

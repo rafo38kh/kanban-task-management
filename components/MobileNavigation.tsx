@@ -1,20 +1,19 @@
 "use client";
-import { Dispatch, SetStateAction, useContext, useLayoutEffect } from "react";
+import { useContext } from "react";
 
-import { StatesContext } from "../contexts/StatesContextProvider";
+import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
 import { createPortal } from "react-dom";
 
 import SwitchTheme from "./SwitchTheme";
-import ModalWrapper from "./ModalWrapper";
-import ModalBoardInformation from "./ModalBoardInformation";
 
 export default function SideNavigation() {
-  const { setIsAddNewBoardModalOpen, setIsSideBarShow } =
-    useContext(StatesContext);
+  const { setIsModalOpen, setModalType, setIsSideBarShow } =
+    useContext(ModalContext);
 
   const handleAddNewBoard = () => {
     setIsSideBarShow(false);
-    setIsAddNewBoardModalOpen(true);
+    setIsModalOpen(true);
+    setModalType(ModalTypes.NewBoard);
   };
 
   const boards = [

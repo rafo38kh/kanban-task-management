@@ -1,19 +1,23 @@
 "use client";
 
-import Button from "./Button";
+import { useContext } from "react";
+import Button from "../Button";
+import { ModalContext } from "@/contexts/ModalContextProvider";
 
 type ModalBoardInformationProps = {
-  boardType: string;
-  buttonText: string;
+  boardTitle: string;
+  boardBtnText: string;
 };
 
-export default function ModalBoardInformation({
-  boardType,
-  buttonText,
+export default function NewAndEditBoard({
+  boardTitle,
+  boardBtnText,
 }: ModalBoardInformationProps) {
+  const { handleClose } = useContext(ModalContext);
   return (
     <>
-      <h1 className="mb-6 text-xl font-bold">{boardType}</h1>
+      <button onClick={handleClose}>Close</button>
+      <h1 className="mb-6 text-xl font-bold">{boardTitle}</h1>
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Board Name</span>
         <input
@@ -67,7 +71,7 @@ export default function ModalBoardInformation({
       <span className="h-6 w-full"></span>
       <Button
         textColor={"text-kanbanVeryLightGrey"}
-        text={buttonText}
+        text={boardBtnText}
         bgColor={"bg-kanbanPurpule"}
         margin={""}
         onClick={() => {

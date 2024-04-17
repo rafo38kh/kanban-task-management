@@ -4,7 +4,7 @@ import "./globals.css";
 
 import Providers from "@/components/Providers";
 import Navigations from "@/components/Navigations";
-import StatesContextProvider from "@/contexts/StatesContextProvider";
+import ModalContextProvider from "@/contexts/ModalContextProvider";
 
 const plus_Jakarta_Sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -27,10 +27,10 @@ export default function RootLayout({
         className={`relative h-screen bg-kanbanLightGreyBG dark:bg-kanbanDarkGreyBG font-medium${plus_Jakarta_Sans.className}`}
       >
         <Providers>
-          <StatesContextProvider>
+          <ModalContextProvider>
             <Navigations />
             {children}
-          </StatesContextProvider>
+          </ModalContextProvider>
         </Providers>
       </body>
     </html>

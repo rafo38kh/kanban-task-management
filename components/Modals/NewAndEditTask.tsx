@@ -1,17 +1,23 @@
-import Button from "./Button";
+import { useContext } from "react";
+
+import { ModalContext } from "@/contexts/ModalContextProvider";
+
+import Button from "../Button";
 
 type ModalTaskInformationProps = {
-  boardType: string;
-  buttonText: string;
+  boardTitle: string;
+  // content?: myam object vorn or kexni sax datan
 };
 
-export default function ModalTaskInformation({
-  boardType,
-  buttonText,
+export default function NewAndEditTask({
+  boardTitle,
 }: ModalTaskInformationProps) {
+  const { handleClose } = useContext(ModalContext);
+
   return (
     <>
-      <h1 className="mb-6 text-xl font-bold">{boardType}</h1>
+      <button onClick={handleClose}>Close</button>
+      <h1 className="mb-6 text-xl font-bold">{boardTitle}</h1>
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Title</span>
         <input
@@ -81,7 +87,7 @@ export default function ModalTaskInformation({
       </div>
       <Button
         textColor={"text-kanbanVeryLightGrey"}
-        text={buttonText}
+        text={"Create Task"}
         bgColor={"bg-kanbanPurpule"}
         margin={""}
         onClick={() => {

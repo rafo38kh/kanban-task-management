@@ -1,19 +1,17 @@
 "use client";
 
-import Button from "./Button";
+import Button from "../Button";
 
 type ModalBoardInformationProps = {
-  boardType: string;
-  buttonText: string;
+  boardTitle: string;
 };
 
-export default function ModalDelateInformation({
-  boardType,
-  buttonText,
+export default function DeletBoardAndTask({
+  boardTitle,
 }: ModalBoardInformationProps) {
   return (
     <>
-      <h1 className=" text-xl font-bold text-kanbanRed">{boardType}</h1>
+      <h1 className=" text-xl font-bold text-kanbanRed">{boardTitle}</h1>
       <p className="my-6 text-xs font-bold text-kanbanLightGrey">
         Are you sure you want to delete the board? This action will remove all
         columns and tasks and cannot be reversed.

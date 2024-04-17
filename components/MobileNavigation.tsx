@@ -1,10 +1,22 @@
 "use client";
-import React from "react";
+import { Dispatch, SetStateAction, useContext, useLayoutEffect } from "react";
+
+import { StatesContext } from "../contexts/StatesContextProvider";
 import { createPortal } from "react-dom";
 
 import SwitchTheme from "./SwitchTheme";
+import ModalWrapper from "./ModalWrapper";
+import ModalBoardInformation from "./ModalBoardInformation";
 
 export default function SideNavigation() {
+  const { setIsAddNewBoardModalOpen, setIsSideBarShow } =
+    useContext(StatesContext);
+
+  const handleAddNewBoard = () => {
+    setIsSideBarShow(false);
+    setIsAddNewBoardModalOpen(true);
+  };
+
   const boards = [
     { boardName: "Platform Launch" },
     { boardName: "Marketing Plan" },
@@ -37,6 +49,7 @@ export default function SideNavigation() {
           ))}
         </ul>
         <button
+          onClick={handleAddNewBoard}
           type="button"
           className="flex items-center justify-start gap-2 p-4 text-kanbanPurpule"
         >
@@ -54,6 +67,14 @@ export default function SideNavigation() {
       <div className="ml-4 w-full rounded-lg bg-kanbanVeryLightGrey px-6 py-2 text-center dark:bg-kanbanDarkGreyBG">
         <SwitchTheme />
       </div>
+      {/* {isAddNewBoardModalOpen && (
+        <ModalWrapper>
+          <ModalBoardInformation
+            boardType={"Add New Board"}
+            buttonText={"Create New Board"}
+          />
+        </ModalWrapper>
+      )} */}
     </div>,
     document.body,
   );

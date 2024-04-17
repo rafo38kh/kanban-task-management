@@ -1,22 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useContext } from "react";
+
+import { StatesContext } from "../contexts/StatesContextProvider";
 
 import TopNavigation from "@/components/TopNavigation";
-import SideNavigation from "@/components/SideNavigation";
+import SideNavigation from "@/components/MobileNavigation";
 
 export default function Navigations() {
-  const [isSideBarshow, setIsSideBarShow] = useState(false);
+  const { isSideBarshow, setIsSideBarShow } = useContext(StatesContext);
 
   return (
     <div>
       <TopNavigation
-        setIsSideBarShow={setIsSideBarShow}
         isSideBarshow={isSideBarshow}
+        setIsSideBarShow={setIsSideBarShow}
       />
 
       {isSideBarshow && (
         <div className="md:revert fixed z-50 min-h-screen w-full bg-black/80">
-          <SideNavigation />
+          <SideNavigation
+          // setIsSideBarShow={setIsSideBarShow}
+          />
         </div>
       )}
     </div>

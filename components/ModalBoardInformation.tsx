@@ -1,37 +1,29 @@
+"use client";
+
 import Button from "./Button";
 
-type ModalTaskInformationProps = {
+type ModalBoardInformationProps = {
   boardType: string;
   buttonText: string;
 };
 
-export default function ModalTaskInformation({
+export default function ModalBoardInformation({
   boardType,
   buttonText,
-}: ModalTaskInformationProps) {
+}: ModalBoardInformationProps) {
   return (
     <>
       <h1 className="mb-6 text-xl font-bold">{boardType}</h1>
       <div className="mb-6 flex flex-col gap-2">
-        <span className="text-xs font-bold">Title</span>
+        <span className="text-xs font-bold">Board Name</span>
         <input
           className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
           type="text"
-          placeholder="e.g. Take coffee break"
+          placeholder="e.g. Web Design"
         />
       </div>
-      <div className="mb-6 flex flex-col gap-2">
-        <span className="text-xs font-bold">Description</span>
-        <textarea
-          rows={4}
-          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
-          placeholder="e.g. It’s always good to take a break. This
-          15 minute break will  recharge the batteries
-          a little."
-        ></textarea>
-      </div>
       <div>
-        <span className="text-xs font-bold">Subtasks</span>
+        <span className="text-xs font-bold">Board Columns</span>
         <div className="mb-5 mt-2 flex flex-row items-center justify-between gap-4">
           <input
             className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
@@ -65,27 +57,21 @@ export default function ModalTaskInformation({
       </div>
       <Button
         textColor={"text-kanbanPurpule"}
-        text={"+ Add New Subtask"}
+        text={"+ Add New Column"}
         bgColor={"bg-kanbanVeryLightGrey"}
-        margin={""}
+        margin={"mb-6"}
         onClick={() => {
-          console.log("+ Add New Subtask");
+          console.log("+ Add New Column");
         }}
       />
-      <div className="my-6 flex flex-col gap-2">
-        <span className="text-xs font-bold">Status</span>
-        <input
-          className="rounded-md border-[1px] border-kanbanLightGrey/20 bg-transparent p-2 text-xs"
-          type="text"
-        />
-      </div>
+      <span className="h-6 w-full"></span>
       <Button
         textColor={"text-kanbanVeryLightGrey"}
         text={buttonText}
         bgColor={"bg-kanbanPurpule"}
         margin={""}
         onClick={() => {
-          console.log("Create Task");
+          console.log("Create New Board");
         }}
       />
     </>

@@ -1,4 +1,4 @@
-import EmptyBoard from "@/components/EmptyBoard";
+import EmptyBoard from "@/components/MainBoard";
 
 export default function Home() {
   return (

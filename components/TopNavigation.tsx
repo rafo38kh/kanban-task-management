@@ -1,5 +1,7 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { StatesContext } from "../contexts/StatesContextProvider";
+
 import ModalWrapper from "./ModalWrapper";
 import ModalTaskInformation from "./ModalTaskInformation";
 
@@ -12,13 +14,12 @@ export default function TopNavigation({
   setIsSideBarShow,
   isSideBarshow,
 }: TopNavigationProps) {
-  const [isAddNewTaskModalOpen, setIsAddNewTaskModalOpen] = useState(false);
+  const { isAddNewTaskModalOpen, setIsAddNewTaskModalOpen } =
+    useContext(StatesContext);
 
   const handleAddNewTask = () => {
     setIsAddNewTaskModalOpen(true);
   };
-
-  console.log(isAddNewTaskModalOpen);
 
   return (
     <div className="flex w-full items-center justify-between bg-kanbanVeryLightGrey p-4 dark:bg-kanbanDarkGrey">
@@ -82,7 +83,10 @@ export default function TopNavigation({
       </div>
       {isAddNewTaskModalOpen && (
         <ModalWrapper>
-          <ModalTaskInformation />
+          <ModalTaskInformation
+            boardType={"Add New Task"}
+            buttonText={"Create Task"}
+          />
         </ModalWrapper>
       )}
     </div>

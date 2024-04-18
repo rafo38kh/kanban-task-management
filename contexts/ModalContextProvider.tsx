@@ -16,13 +16,13 @@ import DeletBoardAndTask from "@/components/Modals/DeletBoardAndTask";
 export enum ModalTypes {
   Main = "main_modal", // ✅
   NewTask = "new_task", // ✅
-  SubTask = "sub_task",
-  SubBoard = "sub_board",
+  SubTask = "sub_task", //✅
+  SubBoard = "sub_board", // ✅
   EditTask = "edit_task", // ✅
   NewBoard = "new_board", // ✅
   EditBoard = "edit_board", // ✅
-  DeleteTask = "delete_task",
-  DeleteBoard = "delete_board",
+  DeleteTask = "delete_task", // ✅
+  DeleteBoard = "delete_board", // ✅
 }
 
 type ModalContext = {

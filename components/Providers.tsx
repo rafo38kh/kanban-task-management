@@ -1,5 +1,6 @@
 "use client";
 import { ReactNode } from "react";
+import ModalContextProvider from "@/contexts/ModalContextProvider";
 import { ThemeContextProvider } from "@/contexts/ThemeContextProvider";
 
 type ProvidersProps = {
@@ -7,5 +8,9 @@ type ProvidersProps = {
 };
 
 export default function Providers({ children }: ProvidersProps) {
-  return <ThemeContextProvider>{children}</ThemeContextProvider>;
+  return (
+    <ThemeContextProvider>
+      <ModalContextProvider>{children}</ModalContextProvider>
+    </ThemeContextProvider>
+  );
 }

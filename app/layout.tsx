@@ -4,6 +4,8 @@ import "./globals.css";
 
 import Providers from "@/components/Providers";
 import Navigations from "@/components/Navigations";
+import MobileNavigation from "@/components/MobileNavigation";
+import SideNavigation from "@/components/SideNavigation";
 
 const plus_Jakarta_Sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -23,12 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative h-screen overflow-hidden bg-kanbanLightGreyBG dark:bg-kanbanDarkGreyBG font-medium${plus_Jakarta_Sans.className}`}
+        className={`relative h-screen w-full overflow-hidden bg-kanbanLightGreyBG font-medium dark:bg-kanbanDarkGreyBG ${plus_Jakarta_Sans.className}`}
       >
-        <Providers>
-          <Navigations />
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

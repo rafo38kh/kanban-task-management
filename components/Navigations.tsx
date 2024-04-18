@@ -4,9 +4,13 @@ import { useContext } from "react";
 import { ModalContext } from "../contexts/ModalContextProvider";
 
 import TopNavigation from "@/components/TopNavigation";
-import SideNavigation from "@/components/MobileNavigation";
+import MobileNavigation from "@/components/MobileNavigation";
 
-export default function Navigations() {
+type NavigationsProps = {
+  isSideNavOpen: boolean;
+};
+
+export default function Navigations({ isSideNavOpen }: NavigationsProps) {
   const { isSideBarshow, setIsSideBarShow } = useContext(ModalContext);
 
   return (
@@ -14,11 +18,12 @@ export default function Navigations() {
       <TopNavigation
         isSideBarshow={isSideBarshow}
         setIsSideBarShow={setIsSideBarShow}
+        isSideNavOpen={isSideNavOpen}
       />
 
       {isSideBarshow && (
         <div className="md:revert fixed z-50 min-h-screen w-full bg-black/80">
-          <SideNavigation />
+          <MobileNavigation />
         </div>
       )}
     </div>

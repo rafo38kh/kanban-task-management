@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 
 import SwitchTheme from "./SwitchTheme";
 
-export default function SideNavigation() {
+export default function MobileNavigation() {
   const { setIsModalOpen, setModalType, setIsSideBarShow } =
     useContext(ModalContext);
 

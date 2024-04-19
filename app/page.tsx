@@ -20,9 +20,6 @@ export default function Home() {
           setIsSideNavOpen={setIsSideNavOpen}
           isSideNavOpen={isSideNavOpen}
         />
-        {/* <button className="h-full w-[17.5rem] bg-kanbanLightGrey">
-          + New Column
-        </button> */}
       </div>
     </div>
   );

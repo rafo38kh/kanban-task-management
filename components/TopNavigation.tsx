@@ -48,7 +48,7 @@ export default function TopNavigation({
   };
 
   return (
-    <div className="flex h-full w-full flex-shrink-0 items-center justify-between bg-kanbanVeryLightGrey p-4 dark:bg-kanbanDarkGrey">
+    <div className="flex h-full w-full flex-shrink-0 items-center justify-between bg-white p-4 dark:bg-kanbanDarkGrey">
       <div className="start flex w-full items-center justify-start gap-4">
         {!isSideNavOpen && (
           <svg
@@ -116,10 +116,10 @@ export default function TopNavigation({
       <div className="flex items-center justify-center gap-2 md:gap-6">
         <button
           type="button"
-          className="rounded-full bg-kanbanPurpule p-2 px-4 md:w-40"
+          className="rounded-full bg-kanbanPurpule p-2 px-4 transition-all duration-200 hover:bg-kanbanPurpuleHover md:w-40"
           onClick={handleAddNewTask}
         >
-          <span className="hidden  md:inline">+ Add New Task</span>
+          <span className="hidden text-white md:inline">+ Add New Task</span>
           <svg
             className="md:hidden"
             width="12"

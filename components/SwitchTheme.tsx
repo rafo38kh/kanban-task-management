@@ -24,7 +24,7 @@ export default function SwitchTheme() {
         }
         className="peer sr-only"
       />
-      <div className="bg-lightFour after:bg-light after:border-light peer-checked:bg-purple peer h-6 w-11 rounded-full bg-kanbanPurpule after:absolute after:left-[32px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:peer-focus:ring-blue-800"></div>
+      <div className="bg-lightFour after:bg-light after:border-light peer-checked:bg-purple peer h-6 w-11 rounded-full bg-kanbanPurpule transition-all duration-200 after:absolute after:left-[32px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:bg-white after:transition-all after:content-[''] hover:bg-kanbanPurpuleHover peer-checked:after:translate-x-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:peer-focus:ring-blue-800"></div>
       <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
         <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
           <path

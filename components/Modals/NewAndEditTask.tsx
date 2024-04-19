@@ -16,7 +16,9 @@ export default function NewAndEditTask({
 
   return (
     <>
-      <button onClick={handleClose}>Close</button>
+      <button type="button" onClick={handleClose}>
+        Close
+      </button>
       <h1 className="mb-6 text-xl font-bold">{boardTitle}</h1>
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Title</span>
@@ -44,8 +46,13 @@ export default function NewAndEditTask({
             type="text"
             placeholder="e.g. Make coffee"
           />
-          <button>
-            <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+          <button type="button" className="group">
+            <svg
+              className="group-hover:stroke-kanbanRed"
+              width="15"
+              height="15"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <g fill="#828FA3" fillRule="evenodd">
                 <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
                 <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
@@ -59,7 +66,7 @@ export default function NewAndEditTask({
             type="text"
             placeholder="e.g. Drink coffee & smile"
           />
-          <button>
+          <button type="button">
             <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
               <g fill="#828FA3" fillRule="evenodd">
                 <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
@@ -70,10 +77,10 @@ export default function NewAndEditTask({
         </div>
       </div>
       <Button
-        textColor={"text-kanbanPurpule"}
         text={"+ Add New Subtask"}
-        bgColor={"bg-kanbanVeryLightGrey"}
-        margin={""}
+        styles={
+          "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG"
+        }
         onClick={() => {
           console.log("+ Add New Subtask");
         }}
@@ -86,10 +93,10 @@ export default function NewAndEditTask({
         />
       </div>
       <Button
-        textColor={"text-kanbanVeryLightGrey"}
         text={"Create Task"}
-        bgColor={"bg-kanbanPurpule"}
-        margin={""}
+        styles={
+          "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey"
+        }
         onClick={() => {
           console.log("Create Task");
         }}

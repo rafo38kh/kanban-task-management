@@ -32,13 +32,21 @@ export default function MainBoard({
             <Column />
           </li>
         ))}
+        <li className="flex h-full w-[17.5rem] items-center justify-center pl-4">
+          <button
+            type="button"
+            className="mt-auto h-[calc(100%_-_3.5rem)] w-[17.5rem] rounded-lg bg-kanbanVeryLightGrey font-bold text-kanbanLightGrey transition-all duration-200 hover:text-kanbanPurpule dark:bg-[#23242f]"
+          >
+            + New Column
+          </button>
+        </li>
       </ul>
       <ModalWrapper isOpen={isModalOpen}>{getModalContent()}</ModalWrapper>
       {!isSideNavOpen && (
         <button
           onClick={handleOpenSideNav}
           type="button"
-          className="absolute bottom-8 left-0 hidden h-12 w-14 rounded-r-full bg-kanbanPurpule p-4 md:block"
+          className="absolute bottom-8 left-0 hidden h-12 w-14 rounded-r-full bg-kanbanPurpule p-4 transition-all duration-200 hover:bg-kanbanPurpuleHover md:block"
         >
           <svg width="16" height="11" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -50,56 +58,18 @@ export default function MainBoard({
       )}
     </>
 
-    // <div className="flex max-w-64 flex-col items-center justify-center gap-8 text-center text-kanbanLightGrey">
-    //   <span>This board is empty. Create a new column to get started.</span>
-    //   <button
-    //     onClick={() => {
-    //       setIsModalOpen(true);
-    //       setModalType(ModalTypes.Main);
-    //     }}
-    //   >
-    //     open main modal
-    //   </button>
-    //   <button
-    //     onClick={() => {
-    //       setIsModalOpen(true);
-    //       setModalType(ModalTypes.EditTask);
-    //     }}
-    //   >
-    //     open edit modal Taks
-    //   </button>
-    //   <button
-    //     onClick={() => {
-    //       setIsModalOpen(true);
-    //       setModalType(ModalTypes.EditBoard);
-    //     }}
-    //   >
-    //     open edit modal Board
-    //   </button>
-    //   <button
-    //     onClick={() => {
-    //       setIsModalOpen(true);
-    //       setModalType(ModalTypes.DeleteBoard);
-    //     }}
-    //   >
-    //     open delete modal Board
-    //   </button>
-    //   <button
-    //     onClick={() => {
-    //       setIsModalOpen(true);
-    //       setModalType(ModalTypes.DeleteTask);
-    //     }}
-    //   >
-    //     open delete modal task
-    //   </button>
-    //   <Button
-    //     margin={""}
-    //     onClick={() => {}}
-    //     textColor={"text-white"}
-    //     text={"+ Add New Column"}
-    //     bgColor={"bg-kanbanPurpule"}
-    //   />
-    //   <ModalWrapper isOpen={isModalOpen}>{getModalContent()}</ModalWrapper>\
+    // <div className="flex h-full w-full items-center justify-center p-8">
+    //   <div className="flex max-w-[30rem] flex-col items-center justify-center gap-8 text-center text-kanbanLightGrey">
+    //     <span>This board is empty. Create a new column to get started.</span>
+    //     <Button
+    //       onClick={() => {}}
+    //       styles={
+    //         "text-white bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200"
+    //       }
+    //       text={"+ Add New Column"}
+    //     />
+    //     <ModalWrapper isOpen={isModalOpen}>{getModalContent()}</ModalWrapper>
+    //   </div>
     // </div>
   );
 }

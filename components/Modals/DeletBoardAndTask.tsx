@@ -17,19 +17,19 @@ export default function DeletBoardAndTask({
         columns and tasks and cannot be reversed.
       </p>
       <Button
-        textColor={"text-kanbanVeryLightGrey"}
         text={"Delete"}
-        bgColor={"bg-kanbanRed"}
-        margin={"mb-6"}
+        styles={
+          "bg-kanbanRed text-kanbanVeryLightGrey hover:bg-kanbanRedHover transition-all duration-200  mb-8"
+        }
         onClick={() => {
           console.log("Create New Board");
         }}
       />
       <Button
-        textColor={"text-kanbanPurpule"}
         text={"Cancel"}
-        bgColor={"bg-kanbanVeryLightGrey"}
-        margin={""}
+        styles={
+          "bg-kanbanVeryLightGrey text-kanbanPurpule hover:bg-white transition-all duration-200 dark:hover:bg-kanbanLightGreyBG"
+        }
         onClick={() => {
           console.log("Create New Board");
         }}

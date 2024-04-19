@@ -26,7 +26,7 @@ export default function SubModal({
         top: rect?.y + rect?.height + 10,
         right: rect.x - rect.right + 10,
       }}
-      className="fixed  right-0 top-0 flex w-40 flex-col items-start justify-center gap-2 rounded-lg bg-white p-4 dark:bg-kanbanDarkGreyBG"
+      className="fixed right-0 top-0 z-30 flex w-40 flex-col items-start justify-center gap-2 rounded-lg bg-white p-4 dark:bg-kanbanDarkGreyBG"
     >
       <button
         type="button"

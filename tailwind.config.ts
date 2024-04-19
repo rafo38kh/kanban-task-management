@@ -17,10 +17,11 @@ const config: Config = {
         kanbanDarkGrey: "#2B2C37",
         kanbanGrey: "#3E3F4E",
         kanbanLightGrey: "#828FA3",
-        kanbanVeryLightGrey: "#F4F7FD",
-        kanbanLightGreyBG: "#E4EBFA",
+        kanbanLightGreyBG: "#F4F7FD", //bg
+        kanbanVeryLightGrey: "#E4EBFA",
         kanbanRed: "#EA5555",
         kanbanRedHover: "#FF9898",
+        kanbanHover: "#ebf0fb",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

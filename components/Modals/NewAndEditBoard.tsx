@@ -60,20 +60,20 @@ export default function NewAndEditBoard({
         </div>
       </div>
       <Button
-        textColor={"text-kanbanPurpule"}
         text={"+ Add New Column"}
-        bgColor={"bg-kanbanVeryLightGrey"}
-        margin={"mb-6"}
+        styles={
+          "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG mb-8"
+        }
         onClick={() => {
           console.log("+ Add New Column");
         }}
       />
       <span className="h-6 w-full"></span>
       <Button
-        textColor={"text-kanbanVeryLightGrey"}
         text={boardBtnText}
-        bgColor={"bg-kanbanPurpule"}
-        margin={""}
+        styles={
+          "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey"
+        }
         onClick={() => {
           console.log("Create New Board");
         }}

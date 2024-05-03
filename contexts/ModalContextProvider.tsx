@@ -6,6 +6,7 @@ import {
   ReactNode,
   createContext,
   SetStateAction,
+  useEffect,
 } from "react";
 
 import NewAndEditTask from "@/components/Modals/NewAndEditTask";
@@ -69,12 +70,13 @@ const ModalContextProvider = ({ children }: ModalContextProvider) => {
       case ModalTypes.Main:
         return <MainChanges />;
       case ModalTypes.NewTask:
-        return <NewAndEditTask boardTitle={"Add New Task"} />;
+        return <NewAndEditTask isEdit={false} boardTitle={"Add New Task"} />;
       case ModalTypes.EditTask:
-        return <NewAndEditTask boardTitle={"Edit Task"} />;
+        return <NewAndEditTask isEdit={true} boardTitle={"Edit Task"} />;
       case ModalTypes.NewBoard:
         return (
           <NewAndEditBoard
+            isEdit={false}
             boardTitle={"Add New Board"}
             boardBtnText="Create New Board"
           />
@@ -82,6 +84,7 @@ const ModalContextProvider = ({ children }: ModalContextProvider) => {
       case ModalTypes.EditBoard:
         return (
           <NewAndEditBoard
+            isEdit={true}
             boardTitle={"Edit Board"}
             boardBtnText="Save Changes"
           />

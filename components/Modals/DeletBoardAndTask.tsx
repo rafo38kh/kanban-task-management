@@ -17,6 +17,7 @@ export default function DeletBoardAndTask({
         columns and tasks and cannot be reversed.
       </p>
       <Button
+        disabled={false}
         text={"Delete"}
         styles={
           "bg-kanbanRed text-kanbanVeryLightGrey hover:bg-kanbanRedHover transition-all duration-200  mb-8"
@@ -26,6 +27,7 @@ export default function DeletBoardAndTask({
         }}
       />
       <Button
+        disabled={false}
         text={"Cancel"}
         styles={
           "bg-kanbanVeryLightGrey text-kanbanPurpule hover:bg-white transition-all duration-200 dark:hover:bg-kanbanLightGreyBG"

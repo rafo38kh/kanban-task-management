@@ -13,7 +13,7 @@ export default function Card() {
         setIsModalOpen(true);
         setModalType(ModalTypes.Main);
       }}
-      className="flex w-[17.5rem] flex-col items-start justify-center  gap-2 rounded-lg bg-white p-4 dark:bg-kanbanGrey"
+      className="flex w-[17.5rem] flex-col items-start justify-center  gap-2 rounded-lg bg-white p-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:bg-kanbanGrey dark:hover:bg-kanbanDarkGrey"
     >
       <h1 className="font-bold text-black dark:text-white">
         Build UI for onboarding flow

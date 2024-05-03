@@ -54,19 +54,28 @@ export default function MainChanges() {
         Subtasks (2 of 3)
       </span>
       <div className="my-2 flex flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG">
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
+        />
         <span className="text-xs font-bold text-kanbanLightGrey">
           Research competitor pricing and business models
         </span>
       </div>
       <div className="my-2 flex flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG">
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
+        />
         <span className="text-xs font-bold text-kanbanLightGrey">
           Research competitor pricing and business models
         </span>
       </div>
       <div className="my-2 flex flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG">
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
+        />
         <span className="text-xs font-bold text-kanbanLightGrey">
           Research competitor pricing and business models
         </span>

@@ -5,6 +5,7 @@ import Button from "../Button";
 import { ModalContext } from "@/contexts/ModalContextProvider";
 
 type ModalBoardInformationProps = {
+  isEdit: boolean;
   boardTitle: string;
   boardBtnText: string;
 };
@@ -14,6 +15,7 @@ export default function NewAndEditBoard({
   boardBtnText,
 }: ModalBoardInformationProps) {
   const { handleClose } = useContext(ModalContext);
+
   return (
     <>
       <button onClick={handleClose}>Close</button>
@@ -60,6 +62,7 @@ export default function NewAndEditBoard({
         </div>
       </div>
       <Button
+        disabled={undefined}
         text={"+ Add New Column"}
         styles={
           "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG mb-8"
@@ -70,6 +73,7 @@ export default function NewAndEditBoard({
       />
       <span className="h-6 w-full"></span>
       <Button
+        disabled={false}
         text={boardBtnText}
         styles={
           "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey"

@@ -33,7 +33,9 @@ export default function MainBoard() {
               </button>
             </li>
           </ul>
-          <ModalWrapper isOpen={isModalOpen}>{getModalContent()}</ModalWrapper>
+          <ModalWrapper isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+            {getModalContent()}
+          </ModalWrapper>
         </>
       ) : (
         <SignIn />

@@ -37,7 +37,6 @@ export default function AuthContextProvider({
   children,
 }: AuthContextProviderProps) {
   const [isAuth, setIsAuth] = useState(false);
-  const { handleClose } = useContext(ModalContext);
 
   useEffect(() => {
     const user =
@@ -50,7 +49,6 @@ export default function AuthContextProvider({
 
   const signInWithGoogle = async () => {
     try {
-      handleClose();
       const response = await signInWithPopup(auth, googleProvider);
       const authInfo = {
         userID: response?.user?.uid,
@@ -71,7 +69,6 @@ export default function AuthContextProvider({
 
   const signInWithGithub = async () => {
     try {
-      handleClose();
       const response = await signInWithPopup(auth, githubProvider);
       const authInfo = {
         userID: response?.user?.uid,
@@ -92,7 +89,6 @@ export default function AuthContextProvider({
 
   const logOut = async () => {
     try {
-      handleClose();
       await signOut(auth);
       setIsAuth(false);
 

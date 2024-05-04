@@ -14,11 +14,8 @@ export default function NewAndEditBoard({
   boardTitle,
   boardBtnText,
 }: ModalBoardInformationProps) {
-  const { handleClose } = useContext(ModalContext);
-
   return (
     <>
-      <button onClick={handleClose}>Close</button>
       <h1 className="mb-6 text-xl font-bold">{boardTitle}</h1>
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Board Name</span>

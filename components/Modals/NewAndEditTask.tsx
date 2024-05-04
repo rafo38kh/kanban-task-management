@@ -4,10 +4,15 @@ import { ModalContext } from "@/contexts/ModalContextProvider";
 
 import Button from "../Button";
 
+type Subtask = {
+  id: string;
+  subtask: string;
+};
+
 type TaskData = {
   taskTitle: string;
   taskDescription: string;
-  subtasks: string[];
+  subtasks: Subtask[];
   status: string;
 };
 
@@ -23,12 +28,14 @@ export default function NewAndEditTask({
   boardTitle,
   // disabled,
 }: ModalTaskInformationProps) {
-  const { handleClose } = useContext(ModalContext);
-
   const initialTaskData: TaskData = {
     taskTitle: "Initial Task Title",
     taskDescription: "Initial Task Description",
-    subtasks: ["Subtask 1", "Subtask 2", "Subtask 3"],
+    subtasks: [
+      { id: "1", subtask: "Subtask 1" },
+      { id: "2", subtask: "Subtask 2" },
+      { id: "3", subtask: "Subtask 3" },
+    ],
     status: "Initial Status",
   };
 
@@ -38,10 +45,15 @@ export default function NewAndEditTask({
       : {
           taskTitle: "",
           taskDescription: "",
-          subtasks: [],
+          subtasks: [
+            { id: "1", subtask: "Subtask 1" },
+            { id: "2", subtask: "Subtask 2" },
+            { id: "3", subtask: "Subtask 3" },
+          ],
           status: "",
         },
   );
+
   const handleChange = (
     key: keyof TaskData,
     e: ChangeEvent<HTMLInputElement>,
@@ -53,13 +65,27 @@ export default function NewAndEditTask({
     });
   };
 
+  const handleDletTask = (id: string) => {
+    setTaskData((prevState) => ({
+      ...prevState,
+      // subtasks: [...prevState?.subtasks.filter((el,idx) => )],
+    }));
+  };
+
+  const handleAddNewTask = () => {
+    setTaskData((prevState) => ({
+      ...prevState,
+      subtasks: [...prevState?.subtasks, { id: "", subtask: "" }],
+    }));
+  };
+
   console.log("taskData", taskData);
 
   return (
     <>
-      <button type="button" onClick={handleClose}>
+      {/* <button type="button" onClick={handleClose}>
         Close
-      </button>
+      </button> */}
       <h1 className="mb-6 text-xl font-bold">{boardTitle}</h1>
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Title</span>
@@ -84,13 +110,21 @@ export default function NewAndEditTask({
       <div>
         <span className="text-xs font-bold">Subtasks</span>
 
-        {taskData?.subtasks?.map((substask) => (
-          <div className="mb-5 mt-2 flex flex-row items-center justify-between gap-4">
+        {taskData?.subtasks?.map((subtask) => (
+          <div
+            key={subtask?.id}
+            className="mb-5 mt-2 flex flex-row items-center justify-between gap-4"
+          >
             <input
               type="text"
-              value={substask}
+              value={subtask?.subtask}
               placeholder="e.g. Make coffee"
               className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
+
+              // onChange={(e) => setTaskData(prevState => {
+              //   ...prevState,
+              //   subtasks: [...prevState?.subtasks, { id: "", handleChange("subtask", e)}],
+              // })}
             />
             <button type="button" className="group">
               <svg
@@ -115,6 +149,7 @@ export default function NewAndEditTask({
           "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG"
         }
         onClick={() => {
+          handleAddNewTask();
           console.log("+ Add New Subtask");
         }}
       />

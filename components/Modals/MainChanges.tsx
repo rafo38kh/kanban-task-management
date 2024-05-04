@@ -6,7 +6,7 @@ import SubModal from "./SubModal";
 export default function MainChanges() {
   const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
 
-  const { handleClose, setClickTarget, setModalType, setIsModalOpen } =
+  const { setClickTarget, setModalType, setIsModalOpen } =
     useContext(ModalContext);
 
   const handleOpenEditDeleteTaskBtns = (e: MouseEvent) => {
@@ -28,7 +28,6 @@ export default function MainChanges() {
 
   return (
     <div className="relative">
-      <button onClick={handleClose}>close</button>
       <div className="flex flex-row items-center justify-between gap-4">
         <h1 className=" text-xl font-bold ">
           Research pricing points of various competitors and trial different

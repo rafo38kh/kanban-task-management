@@ -36,7 +36,6 @@ type ModalContext = {
   clickTarget: HTMLElement | null;
   setClickTarget: Dispatch<SetStateAction<HTMLElement | null>>;
   getModalContent: () => JSX.Element | null;
-  handleClose: () => void;
 };
 
 export const ModalContext = createContext<ModalContext>({
@@ -49,7 +48,6 @@ export const ModalContext = createContext<ModalContext>({
   setIsModalOpen: () => {},
   setClickTarget: () => {},
   getModalContent: () => null,
-  handleClose: () => {},
 });
 
 type ModalContextProvider = { children: ReactNode | ReactNode[] };
@@ -59,11 +57,6 @@ const ModalContextProvider = ({ children }: ModalContextProvider) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<ModalTypes | null>(null);
   const [clickTarget, setClickTarget] = useState<HTMLElement | null>(null);
-
-  const handleClose = () => {
-    setModalType(null);
-    setIsModalOpen(false);
-  };
 
   const getModalContent = () => {
     switch (modalType) {
@@ -109,7 +102,6 @@ const ModalContextProvider = ({ children }: ModalContextProvider) => {
       clickTarget,
       setClickTarget,
       getModalContent,
-      handleClose,
     }),
     [
       isSideBarshow,
@@ -121,7 +113,6 @@ const ModalContextProvider = ({ children }: ModalContextProvider) => {
       clickTarget,
       setClickTarget,
       getModalContent,
-      handleClose,
     ],
   );
 

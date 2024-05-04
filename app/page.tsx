@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+
 import MainBoard from "@/components/MainBoard";
 import Navigations from "@/components/Navigations";
 import SideNavigation from "@/components/SideNavigation";
@@ -10,6 +11,7 @@ export default function Home() {
   const handleOpenSideNav = () => {
     setIsSideNavOpen(true);
   };
+
   return (
     <div
       className={`grid min-h-screen w-full grid-rows-[auto_1fr] overflow-hidden

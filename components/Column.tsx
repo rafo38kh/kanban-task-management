@@ -28,7 +28,7 @@ export default function Column() {
       <span className="px-4">TODO {datas.length}</span>
       <ul className="flex h-full flex-col  gap-4 overflow-y-scroll p-4 pt-0">
         {datas?.map((data) => (
-          <li className="h-full">
+          <li key={data} className="h-full">
             <Card />
           </li>
         ))}

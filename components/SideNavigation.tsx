@@ -1,11 +1,14 @@
 "use client";
-import Image from "next/image";
 import { Dispatch, SetStateAction, useContext } from "react";
-import SwitchTheme from "./SwitchTheme";
-import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
-import { AuthContext } from "@/contexts/AuthContextProvider";
-import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useTheme } from "next-themes";
+import Image from "next/image";
+
+import SwitchTheme from "./SwitchTheme";
+
+import { AuthContext } from "@/contexts/AuthContextProvider";
+import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
+
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 type SideNavigationProps = {
   setIsSideNavOpen: Dispatch<SetStateAction<boolean>>;
@@ -14,10 +17,10 @@ type SideNavigationProps = {
 export default function SideNavigation({
   setIsSideNavOpen,
 }: SideNavigationProps) {
-  const { theme } = useTheme();
   const { isAuth, logOut } = useContext(AuthContext);
-  const { setIsModalOpen, setModalType, setIsSideBarShow } =
-    useContext(ModalContext);
+  const { setIsModalOpen, setModalType } = useContext(ModalContext);
+
+  const { theme } = useTheme();
   const parsedUser = useGetUsersInfo();
 
   const boards = [

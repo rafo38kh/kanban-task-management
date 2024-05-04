@@ -3,9 +3,6 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 import Providers from "@/components/Providers";
-import Navigations from "@/components/Navigations";
-import MobileNavigation from "@/components/MobileNavigation";
-import SideNavigation from "@/components/SideNavigation";
 
 const plus_Jakarta_Sans = Plus_Jakarta_Sans({
   subsets: ["latin"],

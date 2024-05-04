@@ -1,8 +1,9 @@
 "use client";
 import { ReactNode } from "react";
+
+import AuthContextProvider from "../contexts/AuthContextProvider";
 import ModalContextProvider from "@/contexts/ModalContextProvider";
 import { ThemeContextProvider } from "@/contexts/ThemeContextProvider";
-import AuthContextProvider from "../contexts/AuthContextProvider";
 
 type ProvidersProps = {
   children: ReactNode;

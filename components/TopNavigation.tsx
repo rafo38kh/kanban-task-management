@@ -1,38 +1,40 @@
 "use client";
 import {
+  useState,
   Dispatch,
+  useContext,
   MouseEvent,
   SetStateAction,
-  useContext,
-  useState,
 } from "react";
-
 import Image from "next/image";
-import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
-import SubModal from "./Modals/SubModal";
 import { useTheme } from "next-themes";
+
 import { AuthContext } from "@/contexts/AuthContextProvider";
+import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
+
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
+import SubModal from "./Modals/SubModal";
+
 type TopNavigationProps = {
-  setIsSideBarShow: Dispatch<SetStateAction<boolean>>;
   isSideBarshow: boolean;
   isSideNavOpen: boolean;
+  setIsSideBarShow: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function TopNavigation({
-  setIsSideBarShow,
   isSideBarshow,
   isSideNavOpen,
+  setIsSideBarShow,
 }: TopNavigationProps) {
-  const { theme } = useTheme();
   const { isAuth, logOut } = useContext(AuthContext);
-
-  const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
-
   const { setModalType, setIsModalOpen, setClickTarget } =
     useContext(ModalContext);
+
+  const { theme } = useTheme();
   const parsedUser = useGetUsersInfo();
+
+  const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
 
   const handleAddNewTask = () => {
     setIsModalOpen(true);
@@ -40,19 +42,19 @@ export default function TopNavigation({
   };
 
   const handleOpenEditDeleteBoardBtns = (e: MouseEvent) => {
-    setIsEditDeletBoardModal((prevState) => !prevState);
     setClickTarget(e.target as HTMLElement);
+    setIsEditDeletBoardModal((prevState) => !prevState);
   };
 
   const handleEditBoardModal = () => {
-    setIsEditDeletBoardModal(false);
     setIsModalOpen(true);
+    setIsEditDeletBoardModal(false);
     setModalType(ModalTypes.EditBoard);
   };
 
   const handleDeletBoardModal = () => {
-    setIsEditDeletBoardModal(false);
     setIsModalOpen(true);
+    setIsEditDeletBoardModal(false);
     setModalType(ModalTypes.DeleteBoard);
   };
 

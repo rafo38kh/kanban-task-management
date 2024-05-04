@@ -1,11 +1,11 @@
 "use client";
 import { useContext } from "react";
-
-import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
 import { createPortal } from "react-dom";
 
-import SwitchTheme from "./SwitchTheme";
 import { AuthContext } from "@/contexts/AuthContextProvider";
+import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
+
+import SwitchTheme from "./SwitchTheme";
 
 export default function MobileNavigation() {
   const { isAuth } = useContext(AuthContext);
@@ -24,6 +24,7 @@ export default function MobileNavigation() {
     { boardName: "Marketing Plan" },
     { boardName: "Roadmap" },
   ];
+
   return createPortal(
     <div className="absolute left-14 top-20 z-50 flex w-[16.5rem] flex-col items-center justify-start rounded-lg bg-white p-4 pl-0 dark:bg-kanbanGrey">
       <div>

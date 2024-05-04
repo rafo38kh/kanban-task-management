@@ -1,18 +1,17 @@
 "use client";
-import { Dispatch, SetStateAction, useContext } from "react";
-import Button from "./Button";
+import { useContext } from "react";
 
-import ModalWrapper from "./Modals/ModalWrapper";
-import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
-import Column from "./Column";
 import { AuthContext } from "@/contexts/AuthContextProvider";
+import { ModalContext } from "@/contexts/ModalContextProvider";
+
+import Column from "./Column";
 import SignIn from "./SignIn";
+import ModalWrapper from "./Modals/ModalWrapper";
 
 export default function MainBoard() {
   const columns = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
   const { isAuth } = useContext(AuthContext);
-  const { setIsModalOpen, isModalOpen, setModalType, getModalContent } =
-    useContext(ModalContext);
+  const { isModalOpen, getModalContent } = useContext(ModalContext);
 
   return (
     <>
@@ -20,7 +19,7 @@ export default function MainBoard() {
         <>
           <ul className="relative flex h-[100vh_-_100px] w-[calc(100&_-_264px)] overflow-scroll p-4">
             {columns?.map((el) => (
-              <li className="h-full">
+              <li key={el} className="h-full">
                 <Column />
               </li>
             ))}

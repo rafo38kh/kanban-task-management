@@ -11,7 +11,8 @@ import ModalWrapper from "./Modals/ModalWrapper";
 export default function MainBoard() {
   const columns = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
   const { isAuth } = useContext(AuthContext);
-  const { isModalOpen, getModalContent } = useContext(ModalContext);
+  const { isModalOpen, getModalContent, setIsModalOpen } =
+    useContext(ModalContext);
 
   return (
     <>

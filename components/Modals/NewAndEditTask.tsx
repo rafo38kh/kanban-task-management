@@ -68,7 +68,7 @@ export default function NewAndEditTask({
   const handleDletTask = (id: string) => {
     setTaskData((prevState) => ({
       ...prevState,
-      // subtasks: [...prevState?.subtasks.filter((el,idx) => )],
+      subtasks: prevState?.subtasks.filter((el) => el.id !== id),
     }));
   };
 
@@ -105,7 +105,7 @@ export default function NewAndEditTask({
           placeholder="e.g. It’s always good to take a break. This
           15 minute break will  recharge the batteries
           a little."
-        ></textarea>
+        />
       </div>
       <div>
         <span className="text-xs font-bold">Subtasks</span>
@@ -126,7 +126,11 @@ export default function NewAndEditTask({
               //   subtasks: [...prevState?.subtasks, { id: "", handleChange("subtask", e)}],
               // })}
             />
-            <button type="button" className="group">
+            <button
+              type="button"
+              className="group"
+              onClick={() => handleDletTask(subtask?.id)}
+            >
               <svg
                 className="group-hover:stroke-kanbanRed"
                 width="15"

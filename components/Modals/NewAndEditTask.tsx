@@ -1,6 +1,4 @@
-import { ChangeEvent, useContext, useState } from "react";
-
-import { ModalContext } from "@/contexts/ModalContextProvider";
+import { ChangeEvent, useState } from "react";
 
 import Button from "../Button";
 
@@ -75,7 +73,10 @@ export default function NewAndEditTask({
   const handleAddNewTask = () => {
     setTaskData((prevState) => ({
       ...prevState,
-      subtasks: [...prevState?.subtasks, { id: "", subtask: "" }],
+      subtasks: [
+        ...prevState?.subtasks,
+        { id: Math.random().toFixed(1), subtask: "" },
+      ],
     }));
   };
 
@@ -90,11 +91,11 @@ export default function NewAndEditTask({
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Title</span>
         <input
-          value={taskData?.taskTitle}
-          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
           type="text"
+          value={taskData?.taskTitle}
           placeholder="e.g. Take coffee break"
           onChange={(e) => handleChange("taskTitle", e)}
+          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
         />
       </div>
       <div className="mb-6 flex flex-col gap-2">
@@ -120,11 +121,16 @@ export default function NewAndEditTask({
               value={subtask?.subtask}
               placeholder="e.g. Make coffee"
               className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
-
-              // onChange={(e) => setTaskData(prevState => {
-              //   ...prevState,
-              //   subtasks: [...prevState?.subtasks, { id: "", handleChange("subtask", e)}],
-              // })}
+              onChange={(e) =>
+                setTaskData((prevState) => ({
+                  ...prevState,
+                  subtasks: prevState?.subtasks.map((task) =>
+                    task.id === subtask?.id
+                      ? { ...task, subtask: e.target.value }
+                      : task,
+                  ),
+                }))
+              }
             />
             <button
               type="button"

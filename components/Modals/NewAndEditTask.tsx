@@ -46,17 +46,19 @@ export default function NewAndEditTask({
           taskTitle: "",
           taskDescription: "",
           subtasks: [
-            { id: "1", subtask: "Subtask 1" },
-            { id: "2", subtask: "Subtask 2" },
-            { id: "3", subtask: "Subtask 3" },
+            { id: "4", subtask: "Subtask 4" },
+            { id: "5", subtask: "Subtask 5" },
+            { id: "6", subtask: "Subtask 6" },
           ],
           status: "",
         },
   );
 
+  console.log("taskData", taskData);
+
   const handleChange = (
     key: keyof TaskData,
-    e: ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     e.preventDefault();
     setTaskData({
@@ -65,19 +67,29 @@ export default function NewAndEditTask({
     });
   };
 
-  const handleDletTask = (id: string) => {
-    setTaskData((prevState) => ({
-      ...prevState,
-      // subtasks: [...prevState?.subtasks.filter((el,idx) => )],
-    }));
-  };
-
   const handleAddNewTask = () => {
     setTaskData((prevState) => ({
       ...prevState,
       subtasks: [...prevState?.subtasks, { id: "", subtask: "" }],
     }));
   };
+
+  const handleDletTask = (id: string) => {
+    setTaskData((prevState) => ({
+      ...prevState,
+      subtasks: [...prevState?.subtasks.filter((el) => el.id !== id)],
+    }));
+  };
+
+  // const handleAddSubtask = () => {
+  //   setTaskData((prevState) => ({
+  //     ...prevState,
+  //     subtasks: [
+  //       ...prevState.subtasks,
+  //       { id: String(prevState.subtasks.length + 1), subtask: "" },
+  //     ],
+  //   }));
+  // };
 
   console.log("taskData", taskData);
 
@@ -105,6 +117,7 @@ export default function NewAndEditTask({
           placeholder="e.g. It’s always good to take a break. This
           15 minute break will  recharge the batteries
           a little."
+          onChange={(e) => handleChange("taskDescription", e)}
         ></textarea>
       </div>
       <div>
@@ -117,16 +130,27 @@ export default function NewAndEditTask({
           >
             <input
               type="text"
-              value={subtask?.subtask}
+              value={subtask.subtask}
               placeholder="e.g. Make coffee"
               className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
-
-              // onChange={(e) => setTaskData(prevState => {
-              //   ...prevState,
-              //   subtasks: [...prevState?.subtasks, { id: "", handleChange("subtask", e)}],
-              // })}
+              onChange={(e) => {
+                const updatedSubtasks = taskData.subtasks.map((item) =>
+                  item.id === subtask.id
+                    ? { ...item, subtask: e.target.value }
+                    : item,
+                );
+                setTaskData((prevState) => ({
+                  ...prevState,
+                  subtasks: updatedSubtasks,
+                }));
+              }}
             />
-            <button type="button" className="group">
+
+            <button
+              onClick={() => handleDletTask(subtask?.id)}
+              type="button"
+              className="group"
+            >
               <svg
                 className="group-hover:stroke-kanbanRed"
                 width="15"

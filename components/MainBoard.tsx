@@ -2,37 +2,27 @@
 import { Dispatch, SetStateAction, useContext } from "react";
 import Button from "./Button";
 
-import ModalWrapper from "./Modals/ModalWrapper";
-import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
-import Column from "./Column";
 import { AuthContext } from "@/contexts/AuthContextProvider";
+import { ModalContext } from "@/contexts/ModalContextProvider";
+
 import SignIn from "./SignIn";
+import ColumnsList from "./ColumnsList";
+import ModalWrapper from "./Modals/ModalWrapper";
+// import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
+import Column from "./Column";
+// import { AuthContext } from "@/contexts/AuthContextProvider";
+// import SignIn from "./SignIn";
 
 export default function MainBoard() {
-  const columns = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
   const { isAuth } = useContext(AuthContext);
-  const { setIsModalOpen, isModalOpen, setModalType, getModalContent } =
+  const { isModalOpen, getModalContent, setIsModalOpen } =
     useContext(ModalContext);
 
   return (
     <>
       {isAuth ? (
         <>
-          <ul className="relative flex h-[100vh_-_100px] w-[calc(100&_-_264px)] overflow-scroll p-4">
-            {columns?.map((el) => (
-              <li className="h-full">
-                <Column />
-              </li>
-            ))}
-            <li className="flex h-full w-[17.5rem] items-center justify-center pl-4">
-              <button
-                type="button"
-                className="mt-auto h-[calc(100%_-_3.5rem)] w-[17.5rem] rounded-lg bg-kanbanVeryLightGrey font-bold text-kanbanLightGrey transition-all duration-200 hover:text-kanbanPurpule dark:bg-[#23242f]"
-              >
-                + New Column
-              </button>
-            </li>
-          </ul>
+          <ColumnsList />
           <ModalWrapper isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
             {getModalContent()}
           </ModalWrapper>

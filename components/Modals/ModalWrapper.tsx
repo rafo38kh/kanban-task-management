@@ -13,8 +13,6 @@ export default function ModalWrapper({
   setIsOpen,
   children,
 }: ModalWrapperProps) {
-  if (!isOpen) return null;
-
   useEffect(() => {
     const handleBodyClass = () => {
       if (isOpen) {
@@ -48,6 +46,8 @@ export default function ModalWrapper({
       };
     }
   }, [isOpen, setIsOpen]);
+
+  if (!isOpen) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex min-h-screen w-full items-center justify-center bg-black/60">

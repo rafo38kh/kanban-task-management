@@ -9,7 +9,6 @@ import {
   useContext,
 } from "react";
 
-import { ModalContext } from "../contexts/ModalContextProvider";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from "@/config/firebase";
 

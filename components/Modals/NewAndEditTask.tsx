@@ -1,6 +1,4 @@
-import { ChangeEvent, useContext, useState } from "react";
-
-import { ModalContext } from "@/contexts/ModalContextProvider";
+import { ChangeEvent, useState } from "react";
 
 import Button from "../Button";
 
@@ -67,19 +65,29 @@ export default function NewAndEditTask({
     });
   };
 
-  const handleAddNewTask = () => {
-    setTaskData((prevState) => ({
-      ...prevState,
-      subtasks: [...prevState?.subtasks, { id: "", subtask: "" }],
-    }));
-  };
-
   const handleDletTask = (id: string) => {
     setTaskData((prevState) => ({
       ...prevState,
-      subtasks: [...prevState?.subtasks.filter((el) => el.id !== id)],
+      subtasks: prevState?.subtasks.filter((el) => el.id !== id),
     }));
   };
+
+  const handleAddNewTask = () => {
+    setTaskData((prevState) => ({
+      ...prevState,
+      subtasks: [
+        ...prevState?.subtasks,
+        { id: Math.random().toFixed(1), subtask: "" },
+      ],
+    }));
+  };
+
+  // const handleDletTask = (id: string) => {
+  //   setTaskData((prevState) => ({
+  //     ...prevState,
+  //     subtasks: [...prevState?.subtasks.filter((el) => el.id !== id)],
+  //   }));
+  // };
 
   // const handleAddSubtask = () => {
   //   setTaskData((prevState) => ({
@@ -102,11 +110,11 @@ export default function NewAndEditTask({
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Title</span>
         <input
-          value={taskData?.taskTitle}
-          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
           type="text"
+          value={taskData?.taskTitle}
           placeholder="e.g. Take coffee break"
           onChange={(e) => handleChange("taskTitle", e)}
+          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
         />
       </div>
       <div className="mb-6 flex flex-col gap-2">
@@ -133,23 +141,21 @@ export default function NewAndEditTask({
               value={subtask.subtask}
               placeholder="e.g. Make coffee"
               className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
-              onChange={(e) => {
-                const updatedSubtasks = taskData.subtasks.map((item) =>
-                  item.id === subtask.id
-                    ? { ...item, subtask: e.target.value }
-                    : item,
-                );
+              onChange={(e) =>
                 setTaskData((prevState) => ({
                   ...prevState,
-                  subtasks: updatedSubtasks,
-                }));
-              }}
+                  subtasks: prevState?.subtasks.map((task) =>
+                    task.id === subtask?.id
+                      ? { ...task, subtask: e.target.value }
+                      : task,
+                  ),
+                }))
+              }
             />
-
             <button
-              onClick={() => handleDletTask(subtask?.id)}
               type="button"
               className="group"
+              onClick={() => handleDletTask(subtask?.id)}
             >
               <svg
                 className="group-hover:stroke-kanbanRed"

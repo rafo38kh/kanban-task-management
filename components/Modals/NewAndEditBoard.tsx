@@ -1,12 +1,18 @@
 "use client";
 
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useLayoutEffect, useState } from "react";
 import Button from "../Button";
 import { ModalContext } from "@/contexts/ModalContextProvider";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import api from "@/lib/api";
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+import { useAppContext } from "@/contexts/AppContextProvider";
+import { BoardName } from "@/types/SharedTypes";
 
 type Column = {
-  id: string;
-  column: string;
+  id: number;
+  color: string;
+  name: string;
 };
 
 type BoardData = {
@@ -25,22 +31,76 @@ export default function NewAndEditBoard({
   boardTitle,
   boardBtnText,
 }: ModalBoardInformationProps) {
-  const initialBoardkData: BoardData = {
-    boardName: "Initial Board Name",
-    boardColumns: [
-      { id: "1", column: "column 1" },
-      { id: "2", column: "column 2" },
-    ],
-  };
+  const { curBoardId, setCurBoardId } = useAppContext();
+
+  const { setIsModalOpen } = useContext(ModalContext);
+
+  const queryClient = useQueryClient();
+
+  const parsedUser = useGetUsersInfo();
+
+  const {
+    data: columnsData,
+    error: columnsError,
+    isError: isColumnsError,
+    isLoading: isColumnsLoading,
+  } = useQuery({
+    queryKey: ["columns", curBoardId],
+    queryFn: async () => await api.getColumns(parsedUser.userID, curBoardId),
+  });
+
+  const {
+    data: bordNameData,
+    error: boardNameError,
+    isError: isBoardNameError,
+    isLoading: isBoardNameLoading,
+  } = useQuery<BoardName[]>({
+    queryKey: ["boardNames"],
+    queryFn: async () => await api.getBoardNames(parsedUser!.userID),
+  });
+
+  const {
+    error,
+    isError,
+    isLoading,
+    mutate: postBoard,
+    data: postBoardData,
+  } = useMutation(
+    ({
+      userId,
+      boardName,
+      columns,
+    }: {
+      userId: string;
+      boardName: string;
+      columns?: { color: string; column_name: string }[];
+    }) => api.postBoard(userId, boardName, columns),
+    {
+      onSuccess: (data) => {
+        console.log("Board created successfully", data);
+        setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["boardNames"] });
+
+        setCurBoardId(data?.data?.newBoard?.id);
+      },
+      onError: (error) => {
+        console.error("Error creating board:", error);
+      },
+    },
+  );
 
   const [boardData, setBoardData] = useState<BoardData>(
     isEdit
-      ? initialBoardkData
+      ? {
+          boardName: bordNameData?.find((board) => board?.id === curBoardId)
+            ?.name,
+          boardColumns: columnsData,
+        }
       : {
           boardName: "",
           boardColumns: [
-            { id: "1", column: "column 3" },
-            { id: "2", column: "column 4" },
+            { id: 1, color: "red", name: "column 1" },
+            { id: 2, color: "green", name: "column 2" },
           ],
         },
   );
@@ -59,11 +119,18 @@ export default function NewAndEditBoard({
   const handleAddNewColumn = () => {
     setBoardData((prevState) => ({
       ...prevState,
-      boardColumns: [...prevState?.boardColumns, { id: "", column: "" }],
+      boardColumns: [
+        ...prevState?.boardColumns,
+        {
+          id: prevState?.boardColumns?.at(-1)?.id + 1 || 1,
+          color: "",
+          name: "",
+        },
+      ],
     }));
   };
 
-  const handleDeletColumn = (id: string) => {
+  const handleDeletColumn = (id: number) => {
     setBoardData((prevState) => ({
       ...prevState,
       boardColumns: [...prevState?.boardColumns.filter((el) => el.id !== id)],
@@ -75,7 +142,7 @@ export default function NewAndEditBoard({
     <>
       <h1 className="mb-6 text-xl font-bold">{boardTitle}</h1>
       <div className="mb-6 flex flex-col gap-2">
-        <span className="text-xs font-bold">{boardData?.boardName}</span>
+        <span className="text-xs font-bold">Title</span>
         <input
           value={boardData?.boardName}
           className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
@@ -84,15 +151,15 @@ export default function NewAndEditBoard({
           onChange={(e) => handleChange("boardName", e)}
         />
       </div>
-      <div>
-        <span className="text-xs font-bold">Board Columns</span>
-        {boardData?.boardColumns.map((column) => (
-          <div
+      <span className="text-xs font-bold">Board Columns</span>
+      <ul className="max-h-64 overflow-y-scroll pr-4">
+        {boardData?.boardColumns?.map((column, idx) => (
+          <li
             key={column?.id}
             className="mb-5 mt-2 flex flex-row items-center justify-between gap-4"
           >
             <input
-              value={column?.column}
+              value={column?.name}
               className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
               type="text"
               placeholder="e.g. Make coffee"
@@ -100,7 +167,7 @@ export default function NewAndEditBoard({
                 const updatedBoardColumn = boardData?.boardColumns?.map(
                   (item) =>
                     item.id === column.id
-                      ? { ...item, column: e.target.value }
+                      ? { ...item, name: e.target.value }
                       : item,
                 );
                 setBoardData((prevState) => ({
@@ -117,14 +184,14 @@ export default function NewAndEditBoard({
                 </g>
               </svg>
             </button>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
       <Button
         disabled={false}
         text={"+ Add New Column"}
         styles={
-          "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG mb-8"
+          "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG mt-4 mb-8"
         }
         onClick={() => {
           handleAddNewColumn();
@@ -142,7 +209,14 @@ export default function NewAndEditBoard({
           "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey disabled:pointer-events-none disabled:opacity-50"
         }
         onClick={() => {
-          console.log("Create New Board");
+          postBoard({
+            userId: parsedUser!.userID,
+            boardName: boardData?.boardName,
+            columns: boardData?.boardColumns?.map((el) => ({
+              color: el?.color,
+              column_name: el?.name,
+            })),
+          });
         }}
       />
     </>

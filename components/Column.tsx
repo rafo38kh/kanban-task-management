@@ -1,37 +1,23 @@
 import Card from "./Card";
 
-export default function Column() {
-  const datas = [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  ];
+type ColumnProps = {
+  column: {
+    _id: string;
+    color: string;
+    createdAt: string;
+    name: string;
+    parent_board_id: string;
+    updatedAt: string;
+    user_id: string;
+  };
+};
+
+export default function Column({ column }: ColumnProps) {
   return (
     <div className="flex h-full w-full flex-col gap-8">
-      <span className="px-4">TODO {datas.length}</span>
+      <span className="px-4">{column?.name} ()</span>
       <ul className="flex h-full flex-col  gap-4 overflow-y-scroll p-4 pt-0">
-        {datas?.map((data) => (
-          <li key={data} className="h-full">
-            <Card />
-          </li>
-        ))}
+        <Card id={column._id} />
       </ul>
     </div>
   );

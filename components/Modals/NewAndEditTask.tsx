@@ -1,18 +1,11 @@
+"use client";
 import { ChangeEvent, useState } from "react";
-
+import { useAppContext } from "@/contexts/AppContextProvider";
 import Button from "../Button";
-
-type Subtask = {
-  id: string;
-  subtask: string;
-};
-
-type TaskData = {
-  taskTitle: string;
-  taskDescription: string;
-  subtasks: Subtask[];
-  status: string;
-};
+import { useQuery } from "react-query";
+import api from "@/lib/api";
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+import { TaskData } from "@/types/SharedTypes";
 
 type ModalTaskInformationProps = {
   isEdit: boolean;
@@ -26,23 +19,40 @@ export default function NewAndEditTask({
   boardTitle,
   // disabled,
 }: ModalTaskInformationProps) {
-  const initialTaskData: TaskData = {
-    taskTitle: "Initial Task Title",
-    taskDescription: "Initial Task Description",
-    subtasks: [
-      { id: "1", subtask: "Subtask 1" },
-      { id: "2", subtask: "Subtask 2" },
-      { id: "3", subtask: "Subtask 3" },
-    ],
-    status: "Initial Status",
-  };
+  const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
+
+  const { curBoardId } = useAppContext();
+  const parsedUser = useGetUsersInfo();
+
+  // const {
+  //   data: columnsData,
+  //   error: columnsError,
+  //   isError: isColumnsError,
+  //   isLoading: isColumnsLoading,
+  // } = useQuery({
+  //   queryKey: ["columns", curBoardId],
+  //   queryFn: async () => await api.getColumns(parsedUser.userID, curBoardId),
+  // });
+
+  // console.log("columnsData", columnsData);
+  const {
+    data: tasksData,
+    error: tasksError,
+    isError: isTasksError,
+    isLoading: isTasksLoading,
+  } = useQuery<TaskData>({
+    queryKey: ["tasks", curBoardId],
+    queryFn: async () => await api.getTasks(parsedUser.userID, curBoardId),
+  });
+
+  console.log("tasksData", tasksData);
 
   const [taskData, setTaskData] = useState<TaskData>(
     isEdit
-      ? initialTaskData
+      ? tasksData
       : {
-          taskTitle: "",
-          taskDescription: "",
+          name: "",
+          description: "",
           subtasks: [
             { id: "4", subtask: "Subtask 4" },
             { id: "5", subtask: "Subtask 5" },
@@ -82,39 +92,17 @@ export default function NewAndEditTask({
     }));
   };
 
-  // const handleDletTask = (id: string) => {
-  //   setTaskData((prevState) => ({
-  //     ...prevState,
-  //     subtasks: [...prevState?.subtasks.filter((el) => el.id !== id)],
-  //   }));
-  // };
-
-  // const handleAddSubtask = () => {
-  //   setTaskData((prevState) => ({
-  //     ...prevState,
-  //     subtasks: [
-  //       ...prevState.subtasks,
-  //       { id: String(prevState.subtasks.length + 1), subtask: "" },
-  //     ],
-  //   }));
-  // };
-
-  console.log("taskData", taskData);
-
   return (
     <>
-      {/* <button type="button" onClick={handleClose}>
-        Close
-      </button> */}
       <h1 className="mb-6 text-xl font-bold">{boardTitle}</h1>
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Title</span>
         <input
           type="text"
-          value={taskData?.taskTitle}
+          value={taskData?.name}
           placeholder="e.g. Take coffee break"
-          onChange={(e) => handleChange("taskTitle", e)}
-          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
+          onChange={(e) => handleChange("name", e)}
+          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-[0.69rem] text-xs"
         />
       </div>
       <div className="mb-6 flex flex-col gap-2">
@@ -125,7 +113,7 @@ export default function NewAndEditTask({
           placeholder="e.g. It’s always good to take a break. This
           15 minute break will  recharge the batteries
           a little."
-          onChange={(e) => handleChange("taskDescription", e)}
+          onChange={(e) => handleChange("description", e)}
         ></textarea>
       </div>
       <div>
@@ -140,7 +128,7 @@ export default function NewAndEditTask({
               type="text"
               value={subtask.subtask}
               placeholder="e.g. Make coffee"
-              className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
+              className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-[0.69rem] text-xs"
               onChange={(e) =>
                 setTaskData((prevState) => ({
                   ...prevState,
@@ -175,33 +163,82 @@ export default function NewAndEditTask({
       <Button
         disabled={false}
         text={"+ Add New Subtask"}
+        onClick={handleAddNewTask}
         styles={
           "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG"
         }
-        onClick={() => {
-          handleAddNewTask();
-          console.log("+ Add New Subtask");
-        }}
       />
-      <div className="my-6 flex flex-col gap-2">
+      <div className="relative my-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Status</span>
-        <input
-          value={taskData?.status}
-          className="rounded-md border-[1px] border-kanbanLightGrey/20 bg-transparent p-2 text-xs"
-          type="text"
-          onChange={(e) => handleChange("status", e)}
-        />
+        {isEdit ? (
+          tasksData && (
+            <>
+              <button
+                type="button"
+                className="flex items-center justify-between rounded-md border border-kanbanLightGrey p-[0.44rem] text-left"
+                onClick={() =>
+                  setIsTaskStatusItemsShow((prevState) => !prevState)
+                }
+              >
+                {tasksData[0]?.name}
+                {isTaskStatusItemsShow ? (
+                  <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      stroke="#635FC7"
+                      strokeWidth="2"
+                      fill="none"
+                      d="M9 6 5 2 1 6"
+                    />
+                  </svg>
+                ) : (
+                  <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      stroke="#635FC7"
+                      strokeWidth="2"
+                      fill="none"
+                      d="m1 1 4 4 4-4"
+                    />
+                  </svg>
+                )}
+              </button>
+              {isTaskStatusItemsShow && (
+                <ul
+                  className={`absolute top-16 grid h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-kanbanDarkGrey p-4`}
+                >
+                  {tasksData?.status?.map((task) => (
+                    <li>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // TODO: Set state
+                        }}
+                        className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
+                      >
+                        {task?.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )
+        ) : (
+          <input
+            value={taskData?.status}
+            className="rounded-md border-[1px] border-kanbanLightGrey/20 bg-transparent p-2 text-xs"
+            type="text"
+            onChange={(e) => handleChange("status", e)}
+          />
+        )}
       </div>
       <Button
-        disabled={
-          taskData?.taskTitle.length === 0 || taskData.status.length === 0
-        }
+        disabled={taskData?.name?.length === 0 || taskData?.status.length === 0}
         text={"Create Task"}
         styles={
           "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey disabled:pointer-events-none disabled:opacity-50"
         }
         onClick={() => {
-          console.log("Create Task");
+          console.log("edit task");
         }}
       />
     </>

@@ -6,7 +6,6 @@ import {
   useState,
   ReactNode,
   createContext,
-  useContext,
 } from "react";
 
 import { signInWithPopup, signOut } from "firebase/auth";

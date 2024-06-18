@@ -6,13 +6,14 @@ import {
   ReactNode,
   createContext,
   SetStateAction,
-  useEffect,
 } from "react";
 
 import NewAndEditTask from "@/components/Modals/NewAndEditTask";
 import MainChanges from "@/components/Modals/MainChanges";
 import NewAndEditBoard from "@/components/Modals/NewAndEditBoard";
-import DeletBoardAndTask from "@/components/Modals/DeletBoardAndTask";
+import DeletBoardAndTask, {
+  ModalBoardDeleteType,
+} from "@/components/Modals/DeletBoardAndTask";
 
 export enum ModalTypes {
   Main = "main_modal", // ✅
@@ -83,9 +84,9 @@ const ModalContextProvider = ({ children }: ModalContextProvider) => {
           />
         );
       case ModalTypes.DeleteTask:
-        return <DeletBoardAndTask boardTitle={"Delete this task?"} />;
+        return <DeletBoardAndTask type={ModalBoardDeleteType.task} />;
       case ModalTypes.DeleteBoard:
-        return <DeletBoardAndTask boardTitle={"Delete this board?"} />;
+        return <DeletBoardAndTask type={ModalBoardDeleteType.board} />;
       default:
         return null;
     }

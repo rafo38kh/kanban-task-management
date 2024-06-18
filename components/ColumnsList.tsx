@@ -1,23 +1,39 @@
 import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
 
 import Column from "./Column";
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
+import { useQuery } from "react-query";
+import api from "@/lib/api";
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+import { useAppContext } from "@/contexts/AppContextProvider";
 
 export default function ColumnsList() {
   const { setIsModalOpen, setModalType } = useContext(ModalContext);
+  const parsedUser = useGetUsersInfo();
+  const { curBoardId, setCurBoardId } = useAppContext();
 
-  const columns = ["", ""];
+  const {
+    data: columnsData,
+    error: columnsError,
+    isError: isColumnsError,
+    isLoading: isColumnsLoading,
+  } = useQuery({
+    queryKey: ["columns", curBoardId],
+    queryFn: async () => await api.getColumns(parsedUser.userID, curBoardId),
+  });
 
   const handleAddNewBoard = () => {
     setIsModalOpen(true);
-    setModalType(ModalTypes.NewBoard);
+    setModalType(ModalTypes.EditBoard);
   };
 
+  // min-h-[100vh_-_100px]
+
   return (
-    <ul className="relative flex h-[100vh_-_100px] w-[calc(100&_-_264px)] overflow-scroll p-4">
-      {columns?.map((el) => (
-        <li key={el} className="h-full">
-          <Column />
+    <ul className="relative flex h-screen w-[calc(100&_-_264px)] overflow-scroll p-4">
+      {columnsData?.map((column, idx) => (
+        <li key={idx} className="h-full">
+          <Column column={column} />
         </li>
       ))}
       <li className="flex h-full w-[17.5rem] items-center justify-center pl-4">

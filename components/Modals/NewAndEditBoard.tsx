@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useContext, useLayoutEffect, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import Button from "../Button";
 import { ModalContext } from "@/contexts/ModalContextProvider";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -136,7 +136,6 @@ export default function NewAndEditBoard({
       boardColumns: [...prevState?.boardColumns.filter((el) => el.id !== id)],
     }));
   };
-  console.log("boardData", boardData);
 
   return (
     <>
@@ -190,13 +189,10 @@ export default function NewAndEditBoard({
       <Button
         disabled={false}
         text={"+ Add New Column"}
+        onClick={handleAddNewColumn}
         styles={
           "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG mt-4 mb-8"
         }
-        onClick={() => {
-          handleAddNewColumn();
-          console.log("+ Add New Column");
-        }}
       />
       <span className="h-6 w-full"></span>
       <Button

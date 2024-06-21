@@ -2,7 +2,7 @@ import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
 
 import Column from "./Column";
 import { Dispatch, SetStateAction, useContext } from "react";
-import { useQuery } from "react-query";
+import { useQueries, useQuery } from "react-query";
 import api from "@/lib/api";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useAppContext } from "@/contexts/AppContextProvider";
@@ -10,7 +10,7 @@ import { useAppContext } from "@/contexts/AppContextProvider";
 export default function ColumnsList() {
   const { setIsModalOpen, setModalType } = useContext(ModalContext);
   const parsedUser = useGetUsersInfo();
-  const { curBoardId, setCurBoardId } = useAppContext();
+  const { curBoardId } = useAppContext();
 
   const {
     data: columnsData,

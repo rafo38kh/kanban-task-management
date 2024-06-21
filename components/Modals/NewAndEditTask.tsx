@@ -1,68 +1,131 @@
 "use client";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { useAppContext } from "@/contexts/AppContextProvider";
 import Button from "../Button";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import api from "@/lib/api";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
-import { TaskData } from "@/types/SharedTypes";
+import { ColumnNames, TaskData } from "@/types/SharedTypes";
+import { ModalContext } from "@/contexts/ModalContextProvider";
 
 type ModalTaskInformationProps = {
   isEdit: boolean;
   boardTitle: string;
-  // disabled: string;
-  // content?: myam object vorn or kexni sax datan
 };
 
 export default function NewAndEditTask({
   isEdit,
   boardTitle,
-  // disabled,
 }: ModalTaskInformationProps) {
   const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
 
-  const { curBoardId } = useAppContext();
+  const { setIsModalOpen } = useContext(ModalContext);
+  const queryClient = useQueryClient();
   const parsedUser = useGetUsersInfo();
+  const { curBoardId, curTaskId } = useAppContext();
 
-  // const {
-  //   data: columnsData,
-  //   error: columnsError,
-  //   isError: isColumnsError,
-  //   isLoading: isColumnsLoading,
-  // } = useQuery({
-  //   queryKey: ["columns", curBoardId],
-  //   queryFn: async () => await api.getColumns(parsedUser.userID, curBoardId),
-  // });
-
-  // console.log("columnsData", columnsData);
   const {
-    data: tasksData,
+    error,
+    isError,
+    isLoading,
+    mutate: postTask,
+    data: postTaskData,
+  } = useMutation(
+    ({
+      userId,
+      body,
+    }: {
+      userId: string;
+      body: {
+        title: string;
+        description: string;
+        current_status: string;
+        parent_board_id: string;
+        subtasks?: string[];
+      };
+    }) => api.postTask(userId, body),
+    {
+      onSuccess: (data) => {
+        console.log("Task created successfully", data);
+        setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      },
+      onError: (error) => {
+        console.error("Error creating task:", error);
+      },
+    },
+  );
+
+  const {
+    error: editeError,
+    isError: editIsError,
+    isLoading: editIsLoading,
+    mutate: editTask,
+    data: editTaskData,
+  } = useMutation(
+    ({
+      userId,
+      taskId,
+      body,
+    }: {
+      userId: string;
+      taskId: string;
+      body: {
+        title: string;
+        description: string;
+        current_status: string;
+        parent_board_id: string;
+        subtasks?: string[];
+      };
+    }) => api.editTask(userId, taskId, body),
+    {
+      onSuccess: (data) => {
+        console.log("Task edited successfully", data);
+        setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      },
+      onError: (error) => {
+        console.error("Error editing task:", error);
+      },
+    },
+  );
+
+  const {
+    data: task,
     error: tasksError,
-    isError: isTasksError,
-    isLoading: isTasksLoading,
+    isError: isTaskError,
+    isLoading: isTaskLoading,
   } = useQuery<TaskData>({
-    queryKey: ["tasks", curBoardId],
-    queryFn: async () => await api.getTasks(parsedUser.userID, curBoardId),
+    queryKey: ["task", curTaskId],
+    queryFn: async () =>
+      await api.getTask(parsedUser.userID, curBoardId, curTaskId),
   });
 
-  console.log("tasksData", tasksData);
+  console.log(task, "taskData");
+
+  const {
+    data: columnNames,
+    error: columnNamesError,
+    isError: isColumnNamesError,
+    isLoading: isColumnNamesLoading,
+  } = useQuery<ColumnNames[]>({
+    queryKey: ["columnNames", curBoardId],
+    queryFn: async () =>
+      await api.getColumnNames(parsedUser.userID, curBoardId),
+  });
 
   const [taskData, setTaskData] = useState<TaskData>(
     isEdit
-      ? tasksData
+      ? task
       : {
-          name: "",
           description: "",
-          subtasks: [
-            { id: "4", subtask: "Subtask 4" },
-            { id: "5", subtask: "Subtask 5" },
-            { id: "6", subtask: "Subtask 6" },
-          ],
-          status: "",
+          title: "",
+          current_status: "",
+          subtasks: [],
+          parent_column_id: "",
+          id: "",
         },
   );
-
-  console.log("taskData", taskData);
 
   const handleChange = (
     key: keyof TaskData,
@@ -75,21 +138,32 @@ export default function NewAndEditTask({
     });
   };
 
-  const handleDletTask = (id: string) => {
+  const handleDeleteTask = (id: string) => {
     setTaskData((prevState) => ({
       ...prevState,
       subtasks: prevState?.subtasks.filter((el) => el.id !== id),
     }));
   };
 
-  const handleAddNewTask = () => {
+  const handleAddNewSubtask = () => {
     setTaskData((prevState) => ({
       ...prevState,
-      subtasks: [
-        ...prevState?.subtasks,
-        { id: Math.random().toFixed(1), subtask: "" },
-      ],
+      subtasks: [],
     }));
+  };
+
+  const handleConfirmClick = () => {
+    const body = {
+      subtasks: [],
+      title: taskData?.title,
+      description: taskData?.description,
+      current_status: taskData?.current_status,
+      parent_board_id: taskData?.parent_column_id,
+    };
+
+    isEdit
+      ? editTask({ body, taskId: curTaskId, userId: parsedUser?.userID })
+      : postTask({ body, userId: parsedUser?.userID });
   };
 
   return (
@@ -99,9 +173,9 @@ export default function NewAndEditTask({
         <span className="text-xs font-bold">Title</span>
         <input
           type="text"
-          value={taskData?.name}
+          value={taskData?.title}
           placeholder="e.g. Take coffee break"
-          onChange={(e) => handleChange("name", e)}
+          onChange={(e) => handleChange("title", e)}
           className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-[0.69rem] text-xs"
         />
       </div>
@@ -126,7 +200,7 @@ export default function NewAndEditTask({
           >
             <input
               type="text"
-              value={subtask.subtask}
+              value={subtask?.title}
               placeholder="e.g. Make coffee"
               className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-[0.69rem] text-xs"
               onChange={(e) =>
@@ -143,7 +217,7 @@ export default function NewAndEditTask({
             <button
               type="button"
               className="group"
-              onClick={() => handleDletTask(subtask?.id)}
+              onClick={() => handleDeleteTask(subtask?.id)}
             >
               <svg
                 className="group-hover:stroke-kanbanRed"
@@ -163,83 +237,71 @@ export default function NewAndEditTask({
       <Button
         disabled={false}
         text={"+ Add New Subtask"}
-        onClick={handleAddNewTask}
+        onClick={handleAddNewSubtask}
         styles={
           "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG"
         }
       />
       <div className="relative my-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Status</span>
-        {isEdit ? (
-          tasksData && (
-            <>
-              <button
-                type="button"
-                className="flex items-center justify-between rounded-md border border-kanbanLightGrey p-[0.44rem] text-left"
-                onClick={() =>
-                  setIsTaskStatusItemsShow((prevState) => !prevState)
-                }
-              >
-                {tasksData[0]?.name}
-                {isTaskStatusItemsShow ? (
-                  <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      stroke="#635FC7"
-                      strokeWidth="2"
-                      fill="none"
-                      d="M9 6 5 2 1 6"
-                    />
-                  </svg>
-                ) : (
-                  <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      stroke="#635FC7"
-                      strokeWidth="2"
-                      fill="none"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                )}
-              </button>
-              {isTaskStatusItemsShow && (
-                <ul
-                  className={`absolute top-16 grid h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-kanbanDarkGrey p-4`}
+        <button
+          type="button"
+          className="flex items-center justify-between rounded-md border border-kanbanLightGrey p-[0.44rem] text-left"
+          onClick={() => setIsTaskStatusItemsShow((prevState) => !prevState)}
+        >
+          {taskData?.current_status}
+          {/* {tasksData[0]?.current} */}
+          {isTaskStatusItemsShow ? (
+            <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+              <path
+                stroke="#635FC7"
+                strokeWidth="2"
+                fill="none"
+                d="M9 6 5 2 1 6"
+              />
+            </svg>
+          ) : (
+            <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+              <path
+                stroke="#635FC7"
+                strokeWidth="2"
+                fill="none"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          )}
+        </button>
+        {isTaskStatusItemsShow && (
+          <ul
+            className={`absolute top-16 z-50 grid h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-kanbanDarkGrey p-4`}
+          >
+            {columnNames?.map((column) => (
+              <li key={column?.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsTaskStatusItemsShow(false);
+                    setTaskData((prevState) => ({
+                      ...prevState,
+                      current_status: column?.name,
+                    }));
+                  }}
+                  className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
                 >
-                  {tasksData?.status?.map((task) => (
-                    <li>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          // TODO: Set state
-                        }}
-                        className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
-                      >
-                        {task?.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          )
-        ) : (
-          <input
-            value={taskData?.status}
-            className="rounded-md border-[1px] border-kanbanLightGrey/20 bg-transparent p-2 text-xs"
-            type="text"
-            onChange={(e) => handleChange("status", e)}
-          />
+                  {column?.name}
+                </button>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
       <Button
-        disabled={taskData?.name?.length === 0 || taskData?.status.length === 0}
-        text={"Create Task"}
+        disabled={taskData?.title?.length === 0 || !taskData?.current_status}
+        text={isEdit ? "Save Changes" : "Create Task"}
         styles={
           "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey disabled:pointer-events-none disabled:opacity-50"
         }
-        onClick={() => {
-          console.log("edit task");
-        }}
+        onClick={handleConfirmClick}
       />
     </>
   );

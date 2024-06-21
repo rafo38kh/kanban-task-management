@@ -2,12 +2,30 @@
 import { MouseEvent, useContext, useState } from "react";
 import { ModalContext, ModalTypes } from "../../contexts/ModalContextProvider";
 import SubModal from "./SubModal";
+import { useQuery } from "react-query";
+import { TaskData } from "@/types/SharedTypes";
+import api from "@/lib/api";
+import { useAppContext } from "@/contexts/AppContextProvider";
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 export default function MainChanges() {
   const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
 
+  const { curBoardId } = useAppContext();
+  const parsedUser = useGetUsersInfo();
+
   const { setClickTarget, setModalType, setIsModalOpen } =
     useContext(ModalContext);
+
+  const {
+    data: tasksData,
+    error: tasksError,
+    isError: isTasksError,
+    isLoading: isTasksLoading,
+  } = useQuery<TaskData[]>({
+    queryKey: ["tasks", curBoardId],
+    queryFn: async () => await api.getTasks(parsedUser.userID, curBoardId),
+  });
 
   const handleOpenEditDeleteTaskBtns = (e: MouseEvent) => {
     setIsEditDeletBoardModal((prevState) => !prevState);

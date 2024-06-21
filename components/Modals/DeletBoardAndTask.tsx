@@ -52,8 +52,9 @@ export default function DeletBoardAndTask({
       api.deleteTask(userId, taskId!),
     {
       onSuccess: () => {
-        console.log("Task deleted successfully");
         setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["task"] });
+        console.log("Task deleted successfully");
       },
       onError: (error) => {
         console.error(

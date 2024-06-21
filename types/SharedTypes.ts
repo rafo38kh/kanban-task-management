@@ -15,6 +15,11 @@ export type ColumnSchemaType = {
   parent_board_id: string;
 };
 
+export type ColumnNames = {
+  name: string;
+  id: string;
+};
+
 export type SubtaskSchemaType = {
   title: string;
   completed: boolean;
@@ -32,12 +37,19 @@ export type TaskSchemaType = {
 
 export type Subtask = {
   id: string;
-  subtask: string;
+  title: string;
+  completed: boolean;
+  parent_task_id: string;
 };
 
 export type TaskData = {
-  name: string;
   description: string;
-  subtasks: Subtask[];
-  status: string;
+  title: string;
+  user_id?: string;
+  current_status: string;
+  subtasks?: Subtask[];
+  parent_column_id: string;
+  createdAt?: string; // "2024-04-14T23:26:41.554Z"
+  updatedAt?: string; // "2024-04-14T23:26:41.554Z"
+  id: string;
 };

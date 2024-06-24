@@ -3,29 +3,54 @@ import { MouseEvent, useContext, useState } from "react";
 import { ModalContext, ModalTypes } from "../../contexts/ModalContextProvider";
 import SubModal from "./SubModal";
 import { useQuery } from "react-query";
-import { TaskData } from "@/types/SharedTypes";
+import { ColumnNames, TaskData } from "@/types/SharedTypes";
 import api from "@/lib/api";
 import { useAppContext } from "@/contexts/AppContextProvider";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 export default function MainChanges() {
   const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
+  const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
 
-  const { curBoardId } = useAppContext();
+  const { curBoardId, curTaskId } = useAppContext();
   const parsedUser = useGetUsersInfo();
 
   const { setClickTarget, setModalType, setIsModalOpen } =
     useContext(ModalContext);
 
   const {
-    data: tasksData,
-    error: tasksError,
-    isError: isTasksError,
-    isLoading: isTasksLoading,
-  } = useQuery<TaskData[]>({
-    queryKey: ["tasks", curBoardId],
-    queryFn: async () => await api.getTasks(parsedUser.userID, curBoardId),
+    data: columnNames,
+    error: columnNamesError,
+    isError: isColumnNamesError,
+    isLoading: isColumnNamesLoading,
+  } = useQuery<ColumnNames[]>({
+    queryKey: ["columnNames", curBoardId],
+    queryFn: async () =>
+      await api.getColumnNames(parsedUser.userID, curBoardId),
   });
+
+  const {
+    data: taskData,
+    error: taskError,
+    isError: isTaskError,
+    isLoading: isTaskLoading,
+  } = useQuery<TaskData>({
+    queryKey: ["task", curBoardId],
+    queryFn: async () =>
+      await api.getTask(parsedUser.userID, curBoardId, curTaskId),
+  });
+
+  const [taskState, setTaskState] = useState<TaskData>(
+    taskData || {
+      description: "",
+      title: "",
+      current_status: "",
+      subtasks: [],
+      parent_board_id: "",
+    },
+  );
+
+  console.log("taskData", taskData);
 
   const handleOpenEditDeleteTaskBtns = (e: MouseEvent) => {
     setIsEditDeletBoardModal((prevState) => !prevState);
@@ -47,10 +72,7 @@ export default function MainChanges() {
   return (
     <div className="relative">
       <div className="flex flex-row items-center justify-between gap-4">
-        <h1 className=" text-xl font-bold ">
-          Research pricing points of various competitors and trial different
-          business models
-        </h1>
+        <h1 className=" text-xl font-bold ">{taskData?.title}</h1>
 
         <button type="button" onClick={(e) => handleOpenEditDeleteTaskBtns(e)}>
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -63,41 +85,29 @@ export default function MainChanges() {
         </button>
       </div>
       <p className="my-6 text-xs  text-kanbanLightGrey">
-        We know what we're planning to build for version one. Now we need to
-        finalise the first pricing model we'll use. Keep iterating the subtasks
-        until we have a coherent proposition.
+        {taskData?.description}
       </p>
       <span className="text-xs font-bold text-kanbanLightGrey">
-        Subtasks (2 of 3)
+        Subtasks (2 of {taskData?.subtasks?.length})
       </span>
-      <div className="my-2 flex flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG">
-        <input
-          type="checkbox"
-          className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
-        />
-        <span className="text-xs font-bold text-kanbanLightGrey">
-          Research competitor pricing and business models
-        </span>
-      </div>
-      <div className="my-2 flex flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG">
-        <input
-          type="checkbox"
-          className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
-        />
-        <span className="text-xs font-bold text-kanbanLightGrey">
-          Research competitor pricing and business models
-        </span>
-      </div>
-      <div className="my-2 flex flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG">
-        <input
-          type="checkbox"
-          className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
-        />
-        <span className="text-xs font-bold text-kanbanLightGrey">
-          Research competitor pricing and business models
-        </span>
-      </div>
-      <div className="mb-6 flex flex-col gap-2">
+      <ul>
+        {taskData?.subtasks?.map((subtask) => (
+          <li
+            key={subtask?.id}
+            className="my-2 flex flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG"
+          >
+            <input
+              type="checkbox"
+              className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
+              checked={subtask?.completed}
+            />
+            <span className="text-xs font-bold text-kanbanLightGrey">
+              {subtask?.title}
+            </span>
+          </li>
+        ))}
+      </ul>
+      {/* <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold text-kanbanLightGrey">
           Current Status
         </span>
@@ -106,6 +116,58 @@ export default function MainChanges() {
           type="text"
           placeholder="Doing"
         />
+      </div> */}
+      <div className="relative my-6 flex flex-col gap-2">
+        <span className="text-xs font-bold">Current Status</span>
+        <button
+          type="button"
+          className="flex items-center justify-between rounded-md border border-kanbanLightGrey p-[0.44rem] text-left"
+          onClick={() => setIsTaskStatusItemsShow((prevState) => !prevState)}
+        >
+          {taskState?.current_status}
+          {isTaskStatusItemsShow ? (
+            <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+              <path
+                stroke="#635FC7"
+                strokeWidth="2"
+                fill="none"
+                d="M9 6 5 2 1 6"
+              />
+            </svg>
+          ) : (
+            <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+              <path
+                stroke="#635FC7"
+                strokeWidth="2"
+                fill="none"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          )}
+        </button>
+        {isTaskStatusItemsShow && (
+          <ul
+            className={`absolute top-16 z-50 grid h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-kanbanDarkGrey p-4`}
+          >
+            {columnNames?.map((column) => (
+              <li key={column?.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsTaskStatusItemsShow(false);
+                    setTaskState((prevState) => ({
+                      ...prevState,
+                      current_status: column?.name,
+                    }));
+                  }}
+                  className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
+                >
+                  {column?.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       {isEditDeletBoardModal && (
         <SubModal

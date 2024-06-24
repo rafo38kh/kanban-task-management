@@ -48,8 +48,8 @@ export type TaskData = {
   user_id?: string;
   current_status: string;
   subtasks?: Subtask[];
-  parent_column_id: string;
+  parent_board_id: string;
   createdAt?: string; // "2024-04-14T23:26:41.554Z"
   updatedAt?: string; // "2024-04-14T23:26:41.554Z"
-  id: string;
+  id?: string;
 };

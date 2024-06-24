@@ -33,21 +33,23 @@ export default function Column({ column }: ColumnProps) {
     queryFn: async () => await api.getTasks(parsedUser.userID, curBoardId),
   });
 
+  const filtetedTaskData = tasksData?.filter(
+    (task) => task?.current_status === column?.name,
+  );
+
   return (
     <div className="flex h-full w-full flex-col gap-8">
       <span className="px-4">
-        {column?.name} ({column?.tasks_count})
+        {column?.name} ({filtetedTaskData?.length})
       </span>
       <ul className="flex h-full flex-col  gap-4 overflow-y-scroll p-4 pt-0">
-        {tasksData
-          ?.filter((task) => task?.current_status === column?.name)
-          ?.map((cardItem) => (
-            <Card
-              id={cardItem?.id}
-              title={cardItem?.title}
-              subtaskCount={cardItem?.subtasks?.length}
-            />
-          ))}
+        {filtetedTaskData?.map((cardItem) => (
+          <Card
+            id={cardItem?.id}
+            title={cardItem?.title}
+            subtaskCount={cardItem?.subtasks?.length}
+          />
+        ))}
       </ul>
     </div>
   );

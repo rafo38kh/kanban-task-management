@@ -1,8 +1,8 @@
 import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
 
 import Column from "./Column";
-import { Dispatch, SetStateAction, useContext } from "react";
-import { useQueries, useQuery } from "react-query";
+import {  useContext } from "react";
+import {  useQuery } from "react-query";
 import api from "@/lib/api";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useAppContext } from "@/contexts/AppContextProvider";

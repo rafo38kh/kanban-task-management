@@ -101,8 +101,6 @@ export default function NewAndEditTask({
       await api.getTask(parsedUser.userID, curBoardId, curTaskId),
   });
 
-  console.log(task, "taskData");
-
   const {
     data: columnNames,
     error: columnNamesError,
@@ -122,10 +120,11 @@ export default function NewAndEditTask({
           title: "",
           current_status: "",
           subtasks: [],
-          parent_column_id: "",
-          id: "",
+          parent_board_id: "",
         },
   );
+
+  console.log(taskData, "taskData");
 
   const handleChange = (
     key: keyof TaskData,
@@ -158,7 +157,7 @@ export default function NewAndEditTask({
       title: taskData?.title,
       description: taskData?.description,
       current_status: taskData?.current_status,
-      parent_board_id: taskData?.parent_column_id,
+      parent_board_id: taskData?.parent_board_id || curBoardId,
     };
 
     isEdit

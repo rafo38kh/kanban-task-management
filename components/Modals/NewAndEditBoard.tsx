@@ -10,9 +10,10 @@ import { useAppContext } from "@/contexts/AppContextProvider";
 import { BoardName } from "@/types/SharedTypes";
 
 type Column = {
-  id: number;
+  id: string;
   color: string;
   name: string;
+  parent_board_id: string;
 };
 
 type BoardData = {
@@ -89,6 +90,37 @@ export default function NewAndEditBoard({
     },
   );
 
+  const {
+    error: errorEditBoard,
+    isError: isEditBoard,
+    isLoading: isLoadingEditBoard,
+    mutate: editBoard,
+    data: editBoardData,
+  } = useMutation(
+    ({
+      userId,
+      boardId,
+      body,
+    }: {
+      userId: string;
+      boardId: string;
+      body?: {
+        board_name: string;
+        columns: Column[];
+      };
+    }) => api.editBoard(userId, boardId, body),
+    {
+      onSuccess: (data) => {
+        console.log("Board edited successfully", data);
+        setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["board"] });
+      },
+      onError: (error) => {
+        console.error("Error editing board:", error);
+      },
+    },
+  );
+
   const [boardData, setBoardData] = useState<BoardData>(
     isEdit
       ? {
@@ -99,11 +131,23 @@ export default function NewAndEditBoard({
       : {
           boardName: "",
           boardColumns: [
-            { id: 1, color: "red", name: "column 1" },
-            { id: 2, color: "green", name: "column 2" },
+            {
+              id: "1",
+              color: "red",
+              column_name: "column 1",
+              parent_board_id: "",
+            },
+            {
+              id: "2",
+              color: "green",
+              column_name: "column 2",
+              parent_board_id: "",
+            },
           ],
         },
   );
+
+  console.log(boardData, "boardData");
 
   const handleChange = (
     key: keyof BoardData,
@@ -122,15 +166,16 @@ export default function NewAndEditBoard({
       boardColumns: [
         ...prevState?.boardColumns,
         {
-          id: prevState?.boardColumns?.at(-1)?.id + 1 || 1,
+          id: (prevState?.boardColumns?.at(-1)?.id + 1 || 1)?.toString(),
           color: "",
-          name: "",
+          column_name: "",
+          parent_board_id: "",
         },
       ],
     }));
   };
 
-  const handleDeletColumn = (id: number) => {
+  const handleDeletColumn = (id: string) => {
     setBoardData((prevState) => ({
       ...prevState,
       boardColumns: [...prevState?.boardColumns.filter((el) => el.id !== id)],
@@ -152,7 +197,7 @@ export default function NewAndEditBoard({
       </div>
       <span className="text-xs font-bold">Board Columns</span>
       <ul className="max-h-64 overflow-y-scroll pr-4">
-        {boardData?.boardColumns?.map((column, idx) => (
+        {boardData?.boardColumns?.map((column) => (
           <li
             key={column?.id}
             className="mb-5 mt-2 flex flex-row items-center justify-between gap-4"
@@ -166,7 +211,7 @@ export default function NewAndEditBoard({
                 const updatedBoardColumn = boardData?.boardColumns?.map(
                   (item) =>
                     item.id === column.id
-                      ? { ...item, name: e.target.value }
+                      ? { ...item, column_name: e.target.value }
                       : item,
                 );
                 setBoardData((prevState) => ({
@@ -175,7 +220,12 @@ export default function NewAndEditBoard({
                 }));
               }}
             />
-            <button type="button" onClick={() => handleDeletColumn(column?.id)}>
+            <button
+              type="button"
+              onClick={() => {
+                handleDeletColumn(column?.id);
+              }}
+            >
               <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
                 <g fill="#828FA3" fillRule="evenodd">
                   <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
@@ -205,14 +255,23 @@ export default function NewAndEditBoard({
           "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey disabled:pointer-events-none disabled:opacity-50"
         }
         onClick={() => {
-          postBoard({
-            userId: parsedUser!.userID,
-            boardName: boardData?.boardName,
-            columns: boardData?.boardColumns?.map((el) => ({
-              color: el?.color,
-              column_name: el?.name,
-            })),
-          });
+          isEdit
+            ? editBoard({
+                userId: parsedUser!.userID,
+                boardId: curBoardId,
+                body: {
+                  board_name: boardData?.boardName,
+                  columns: boardData?.boardColumns,
+                },
+              })
+            : postBoard({
+                userId: parsedUser!.userID,
+                boardName: boardData?.boardName,
+                columns: boardData?.boardColumns?.map((el) => ({
+                  color: el?.color,
+                  column_name: el?.column_name,
+                })),
+              });
         }}
       />
     </>

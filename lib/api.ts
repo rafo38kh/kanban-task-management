@@ -44,6 +44,30 @@ const getBoardNames = async (userId: string) => {
   return response.data;
 };
 
+const editBoard = async (
+  userId: string,
+  boardId: string,
+  body: {
+    board_name: string;
+    columns: {
+      id: string;
+      color: string;
+      column_name: string;
+      parent_board_id: string;
+    }[];
+  },
+) => {
+  try {
+    const response = await axiosFetch.put<{
+      data: { newTaks: TaskSchemaType };
+    }>(`/board/${userId}/${boardId}`, body);
+
+    return response?.data;
+  } catch (error) {
+    console.error("There was an error editing the POST request:", error);
+  }
+};
+
 const deleteBoard = async (userId: string, boardId: string) => {
   const response = await axiosFetch.delete(`/board/${userId}/${boardId}`);
   return response.data;
@@ -128,6 +152,7 @@ const api = {
   postBoard,
   getBoards,
   findeBoard,
+  editBoard,
   getColumns,
   deleteBoard,
   deleteTask,

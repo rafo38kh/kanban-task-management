@@ -2,7 +2,7 @@
 import { MouseEvent, useContext, useState } from "react";
 import { ModalContext, ModalTypes } from "../../contexts/ModalContextProvider";
 import SubModal from "./SubModal";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ColumnNames, TaskData } from "@/types/SharedTypes";
 import api from "@/lib/api";
 import { useAppContext } from "@/contexts/AppContextProvider";
@@ -12,11 +12,46 @@ export default function MainChanges() {
   const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
   const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
 
+  const queryClient = useQueryClient();
   const { curBoardId, curTaskId } = useAppContext();
   const parsedUser = useGetUsersInfo();
 
   const { setClickTarget, setModalType, setIsModalOpen } =
     useContext(ModalContext);
+
+  const {
+    error: editeError,
+    isError: editIsError,
+    isLoading: editIsLoading,
+    mutate: editTask,
+    data: editTaskData,
+  } = useMutation(
+    ({
+      userId,
+      taskId,
+      body,
+    }: {
+      userId: string;
+      taskId: string;
+      body: {
+        title: string;
+        description: string;
+        current_status: string;
+        parent_board_id: string;
+        subtasks?: string[];
+      };
+    }) => api.editTask(userId, taskId, body),
+    {
+      onSuccess: (data) => {
+        console.log("Task edited successfully", data);
+        setIsModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      },
+      onError: (error) => {
+        console.error("Error editing task:", error);
+      },
+    },
+  );
 
   const {
     data: columnNames,
@@ -52,6 +87,17 @@ export default function MainChanges() {
 
   console.log("taskData", taskData);
 
+  const handleConfirmClick = () => {
+    const body = {
+      subtasks: [],
+      title: taskState?.title,
+      description: taskState?.description,
+      current_status: taskState?.current_status,
+      parent_board_id: taskState?.parent_board_id || curBoardId,
+    };
+    editTask({ body, taskId: curTaskId, userId: parsedUser?.userID });
+  };
+
   const handleOpenEditDeleteTaskBtns = (e: MouseEvent) => {
     setIsEditDeletBoardModal((prevState) => !prevState);
     setClickTarget(e.target as HTMLElement);
@@ -84,7 +130,7 @@ export default function MainChanges() {
           </svg>
         </button>
       </div>
-      <p className="my-6 text-xs  text-kanbanLightGrey">
+      <p className="my-6 break-words text-xs text-kanbanLightGrey">
         {taskData?.description}
       </p>
       <span className="text-xs font-bold text-kanbanLightGrey">
@@ -107,16 +153,7 @@ export default function MainChanges() {
           </li>
         ))}
       </ul>
-      {/* <div className="mb-6 flex flex-col gap-2">
-        <span className="text-xs font-bold text-kanbanLightGrey">
-          Current Status
-        </span>
-        <input
-          className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
-          type="text"
-          placeholder="Doing"
-        />
-      </div> */}
+
       <div className="relative my-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Current Status</span>
         <button
@@ -154,15 +191,16 @@ export default function MainChanges() {
                 <button
                   type="button"
                   onClick={() => {
+                    handleConfirmClick();
                     setIsTaskStatusItemsShow(false);
                     setTaskState((prevState) => ({
                       ...prevState,
-                      current_status: column?.name,
+                      current_status: column?.column_name,
                     }));
                   }}
                   className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
                 >
-                  {column?.name}
+                  {column?.column_name}
                 </button>
               </li>
             ))}

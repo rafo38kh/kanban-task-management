@@ -11,7 +11,7 @@ type ColumnProps = {
     id: string;
     color: string;
     createdAt: string;
-    name: string;
+    column_name: string;
     tasks_count: number;
     parent_board_id: string;
     updatedAt: string;
@@ -34,13 +34,13 @@ export default function Column({ column }: ColumnProps) {
   });
 
   const filtetedTaskData = tasksData?.filter(
-    (task) => task?.current_status === column?.name,
+    (task) => task?.current_status === column?.column_name,
   );
 
   return (
     <div className="flex h-full w-full flex-col gap-8">
-      <span className="px-4">
-        {column?.name} ({filtetedTaskData?.length})
+      <span className="min-w-80 px-4">
+        {column?.column_name} ({filtetedTaskData?.length})
       </span>
       <ul className="flex h-full flex-col  gap-4 overflow-y-scroll p-4 pt-0">
         {filtetedTaskData?.map((cardItem) => (

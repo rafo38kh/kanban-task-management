@@ -112,19 +112,21 @@ export default function NewAndEditTask({
       await api.getColumnNames(parsedUser.userID, curBoardId),
   });
 
+  console.log(columnNames, "columnNames");
+
   const [taskData, setTaskData] = useState<TaskData>(
     isEdit
       ? task
       : {
           description: "",
           title: "",
-          current_status: "",
+          current_status: columnNames?.at(0)?.column_name,
           subtasks: [],
           parent_board_id: "",
         },
   );
 
-  console.log(taskData, "taskData");
+  console.log(taskData?.subtasks, "taskData");
 
   const handleChange = (
     key: keyof TaskData,
@@ -147,7 +149,15 @@ export default function NewAndEditTask({
   const handleAddNewSubtask = () => {
     setTaskData((prevState) => ({
       ...prevState,
-      subtasks: [],
+      subtasks: [
+        ...prevState?.subtasks,
+        {
+          id: (prevState?.subtasks?.at(-1)?.id + 1 || 1)?.toString(),
+          title: "",
+          completed: false,
+          parent_task_id: "",
+        },
+      ],
     }));
   };
 
@@ -181,6 +191,7 @@ export default function NewAndEditTask({
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Description</span>
         <textarea
+          value={taskData?.description}
           rows={4}
           className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
           placeholder="e.g. It’s always good to take a break. This
@@ -205,10 +216,8 @@ export default function NewAndEditTask({
               onChange={(e) =>
                 setTaskData((prevState) => ({
                   ...prevState,
-                  subtasks: prevState?.subtasks.map((task) =>
-                    task.id === subtask?.id
-                      ? { ...task, subtask: e.target.value }
-                      : task,
+                  subtasks: prevState?.subtasks.map((s) =>
+                    s.id === subtask?.id ? { ...s, title: e.target.value } : s,
                   ),
                 }))
               }
@@ -282,12 +291,12 @@ export default function NewAndEditTask({
                     setIsTaskStatusItemsShow(false);
                     setTaskData((prevState) => ({
                       ...prevState,
-                      current_status: column?.name,
+                      current_status: column?.column_name,
                     }));
                   }}
                   className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
                 >
-                  {column?.name}
+                  {column?.column_name}
                 </button>
               </li>
             ))}

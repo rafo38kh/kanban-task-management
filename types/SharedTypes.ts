@@ -16,7 +16,7 @@ export type ColumnSchemaType = {
 };
 
 export type ColumnNames = {
-  name: string;
+  column_name: string;
   id: string;
 };
 

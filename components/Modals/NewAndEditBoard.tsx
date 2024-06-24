@@ -12,7 +12,7 @@ import { BoardName } from "@/types/SharedTypes";
 type Column = {
   id: string;
   color: string;
-  name: string;
+  column_name: string;
   parent_board_id: string;
 };
 
@@ -147,8 +147,6 @@ export default function NewAndEditBoard({
         },
   );
 
-  console.log(boardData, "boardData");
-
   const handleChange = (
     key: keyof BoardData,
     e: ChangeEvent<HTMLInputElement>,
@@ -203,7 +201,7 @@ export default function NewAndEditBoard({
             className="mb-5 mt-2 flex flex-row items-center justify-between gap-4"
           >
             <input
-              value={column?.name}
+              value={column?.column_name}
               className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
               type="text"
               placeholder="e.g. Make coffee"

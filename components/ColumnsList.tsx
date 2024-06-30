@@ -1,8 +1,8 @@
 import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
 
 import Column from "./Column";
-import {  useContext } from "react";
-import {  useQuery } from "react-query";
+import { useContext } from "react";
+import { useQuery } from "react-query";
 import api from "@/lib/api";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useAppContext } from "@/contexts/AppContextProvider";
@@ -26,8 +26,6 @@ export default function ColumnsList() {
     setIsModalOpen(true);
     setModalType(ModalTypes.EditBoard);
   };
-
-  // min-h-[100vh_-_100px]
 
   return (
     <ul className="relative flex h-screen w-[calc(100&_-_264px)] overflow-scroll p-4">

@@ -91,11 +91,11 @@ export default function NewAndEditBoard({
   );
 
   const {
-    error: errorEditBoard,
-    isError: isEditBoard,
-    isLoading: isLoadingEditBoard,
     mutate: editBoard,
     data: editBoardData,
+    isError: isEditBoard,
+    error: errorEditBoard,
+    isLoading: isLoadingEditBoard,
   } = useMutation(
     ({
       userId,
@@ -113,7 +113,7 @@ export default function NewAndEditBoard({
       onSuccess: (data) => {
         console.log("Board edited successfully", data);
         setIsModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["board"] });
+        queryClient.invalidateQueries({ queryKey: ["columns"] });
       },
       onError: (error) => {
         console.error("Error editing board:", error);

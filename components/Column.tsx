@@ -46,6 +46,7 @@ export default function Column({ column }: ColumnProps) {
         {filtetedTaskData?.map((cardItem) => (
           <Card
             id={cardItem?.id}
+            key={cardItem?.id}
             title={cardItem?.title}
             subtaskCount={cardItem?.subtasks?.length}
           />

@@ -91,11 +91,11 @@ export default function NewAndEditBoard({
   );
 
   const {
-    error: errorEditBoard,
-    isError: isEditBoard,
-    isLoading: isLoadingEditBoard,
     mutate: editBoard,
     data: editBoardData,
+    isError: isEditBoard,
+    error: errorEditBoard,
+    isLoading: isLoadingEditBoard,
   } = useMutation(
     ({
       userId,

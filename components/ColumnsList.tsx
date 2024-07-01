@@ -29,8 +29,6 @@ export default function ColumnsList() {
     setModalType(ModalTypes.EditBoard);
   };
 
-  // min-h-[100vh_-_100px]
-
   return (
     <ul className="relative flex h-screen w-[calc(100&_-_264px)] overflow-scroll p-4">
       {columnsData?.map((column) => (

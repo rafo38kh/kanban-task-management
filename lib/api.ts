@@ -147,6 +147,19 @@ const deleteTask = async (userId: string, boardId: string) => {
   return response.data;
 };
 
+const changeSubtask = async (
+  userId: string,
+  body: {
+    subtask_id: string;
+  },
+) => {
+  const response = await axiosFetch.post(
+    `/subtasks/mark-subtask/${userId}`,
+    body,
+  );
+  return response.data;
+};
+
 const api = {
   getBoardNames,
   postBoard,
@@ -161,6 +174,7 @@ const api = {
   getColumnNames,
   getTask,
   editTask,
+  changeSubtask,
 };
 
 export default api;

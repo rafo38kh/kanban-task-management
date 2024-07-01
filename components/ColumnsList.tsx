@@ -1,11 +1,12 @@
 import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
 
 import Column from "./Column";
-import {  useContext } from "react";
-import {  useQuery } from "react-query";
+import { useContext } from "react";
+import { useQuery } from "react-query";
 import api from "@/lib/api";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useAppContext } from "@/contexts/AppContextProvider";
+import { ColumnSchemaType } from "@/types/SharedTypes";
 
 export default function ColumnsList() {
   const { setIsModalOpen, setModalType } = useContext(ModalContext);
@@ -17,9 +18,10 @@ export default function ColumnsList() {
     error: columnsError,
     isError: isColumnsError,
     isLoading: isColumnsLoading,
-  } = useQuery({
+  } = useQuery<ColumnSchemaType[]>({
     queryKey: ["columns", curBoardId],
     queryFn: async () => await api.getColumns(parsedUser.userID, curBoardId),
+    enabled: !!curBoardId,
   });
 
   const handleAddNewBoard = () => {
@@ -31,8 +33,8 @@ export default function ColumnsList() {
 
   return (
     <ul className="relative flex h-screen w-[calc(100&_-_264px)] overflow-scroll p-4">
-      {columnsData?.map((column, idx) => (
-        <li key={idx} className="h-full">
+      {columnsData?.map((column) => (
+        <li key={column?.id} className="h-full">
           <Column column={column} />
         </li>
       ))}

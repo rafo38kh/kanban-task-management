@@ -1,11 +1,5 @@
 "use client";
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { useQuery } from "react-query";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -35,12 +29,6 @@ export default function SideNavigation({
 
   const { theme } = useTheme();
   const parsedUser = useGetUsersInfo();
-
-  // const [isClient, setIsClient] = useState(false);
-
-  // useEffect(() => {
-  //   setIsClient(true);
-  // }, []);
 
   const {
     data: bordNameData,
@@ -95,32 +83,42 @@ export default function SideNavigation({
         </div>
         {isAuth && (
           <>
-            <ul className=" h-[calc(100%_-20rem)] overflow-scroll">
-              {bordNameData?.map((board) => (
-                <button
-                  type="button"
-                  key={board?.id}
-                  onClick={() => setCurBoardId(board?.id)}
-                  className={`group  w-5/6 rounded-r-full py-3 pl-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:hover:bg-white ${curBoardId === board?.id ? "bg-kanbanVeryLightGrey dark:bg-white" : ""}`}
-                >
-                  <li className="flex flex-row items-center justify-start gap-2">
-                    <svg
-                      className="transition-all duration-200 group-hover:stroke-kanbanPurpule"
-                      width="16"
-                      height="16"
-                      xmlns="http://www.w3.org/2000/svg"
+            <ul className="h-max max-h-[30rem] overflow-scroll">
+              {isBoardNameLoading
+                ? Array?.from({ length: 3 })?.map((el, index) => (
+                    <li
+                      key={index}
+                      className="flex w-full animate-pulse flex-row items-center justify-center gap-4 p-4"
                     >
-                      <path
-                        d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"
-                        fill="#828FA3"
-                      />
-                    </svg>
-                    <span className="truncate text-kanbanLightGrey transition-all duration-200 group-hover:text-kanbanPurpule">
-                      {board?.name}
-                    </span>
-                  </li>
-                </button>
-              ))}
+                      <span className="rounded-lg bg-slate-600 p-2"></span>
+                      <span className="w-full rounded-lg bg-slate-600 p-2"></span>
+                    </li>
+                  ))
+                : bordNameData?.map((board) => (
+                    <button
+                      type="button"
+                      key={board?.id}
+                      onClick={() => setCurBoardId(board?.id)}
+                      className={`group  w-5/6 rounded-r-full py-3 pl-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:hover:bg-white ${curBoardId === board?.id ? "bg-kanbanVeryLightGrey dark:bg-white" : ""}`}
+                    >
+                      <li className="flex flex-row items-center justify-start gap-2">
+                        <svg
+                          className="transition-all duration-200 group-hover:stroke-kanbanPurpule"
+                          width="16"
+                          height="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z"
+                            fill="#828FA3"
+                          />
+                        </svg>
+                        <span className="truncate text-kanbanLightGrey transition-all duration-200 group-hover:text-kanbanPurpule">
+                          {board?.name}
+                        </span>
+                      </li>
+                    </button>
+                  ))}
             </ul>
             <button
               onClick={handleAddNewBoard}

@@ -80,7 +80,7 @@ export default function NewAndEditBoard({
       onSuccess: (data) => {
         console.log("Board created successfully", data);
         setIsModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["boardNames"] });
+        queryClient.invalidateQueries({ queryKey: ["board"] });
 
         setCurBoardId(data?.data?.newBoard?.id);
       },
@@ -113,6 +113,7 @@ export default function NewAndEditBoard({
       onSuccess: (data) => {
         console.log("Board edited successfully", data);
         setIsModalOpen(false);
+        setCurBoardId("");
         queryClient.invalidateQueries({ queryKey: ["board"] });
       },
       onError: (error) => {
@@ -120,6 +121,8 @@ export default function NewAndEditBoard({
       },
     },
   );
+
+  console.log(editBoardData, "editBoardData");
 
   const [boardData, setBoardData] = useState<BoardData>(
     isEdit
@@ -147,6 +150,12 @@ export default function NewAndEditBoard({
         },
   );
 
+  console.log(boardData?.boardColumns, "boardData?.boardColumns");
+
+  const isColumnNameEmpty = boardData?.boardColumns?.every(
+    (names) => names?.column_name !== "",
+  );
+
   const handleChange = (
     key: keyof BoardData,
     e: ChangeEvent<HTMLInputElement>,
@@ -164,10 +173,13 @@ export default function NewAndEditBoard({
       boardColumns: [
         ...prevState?.boardColumns,
         {
-          id: (prevState?.boardColumns?.at(-1)?.id + 1 || 1)?.toString(),
+          id: isEdit
+            ? ""
+            : (prevState?.boardColumns?.at(-1)?.id + 1 || 1)?.toString(),
           color: "",
           column_name: "",
-          parent_board_id: "",
+          parent_board_id: curBoardId,
+          // user_id: parsedUser!.userID,
         },
       ],
     }));
@@ -244,7 +256,7 @@ export default function NewAndEditBoard({
       />
       <span className="h-6 w-full"></span>
       <Button
-        disabled={boardData?.boardName?.length === 0}
+        disabled={boardData?.boardName?.length === 0 || !isColumnNameEmpty}
         text={boardBtnText}
         // styles={
         //   "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey"
@@ -260,15 +272,20 @@ export default function NewAndEditBoard({
                 body: {
                   board_name: boardData?.boardName,
                   columns: boardData?.boardColumns,
+                  // columns: [
+                  //   {
+                  //     id: "1",
+                  //     color: "red",
+                  //     column_name: "test edit",
+                  //     parent_board_id: curBoardId,
+                  //   },
+                  // ],
                 },
               })
             : postBoard({
                 userId: parsedUser!.userID,
                 boardName: boardData?.boardName,
-                columns: boardData?.boardColumns?.map((el) => ({
-                  color: el?.color,
-                  column_name: el?.column_name,
-                })),
+                columns: boardData?.boardColumns,
               });
         }}
       />

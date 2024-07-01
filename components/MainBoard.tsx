@@ -35,7 +35,7 @@ export default function MainBoard({}: MainBoardProps) {
     onSuccess: (data) => {
       console.log("Board fetched successfully", data);
 
-      setCurBoardId(data?.at(0)?.id);
+      // setCurBoardId(data?.at(0)?.id);
     },
   });
 

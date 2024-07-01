@@ -19,10 +19,10 @@ export default function NewAndEditTask({
 }: ModalTaskInformationProps) {
   const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
 
-  const { setIsModalOpen } = useContext(ModalContext);
-  const queryClient = useQueryClient();
   const parsedUser = useGetUsersInfo();
-  const { curBoardId, curTaskId } = useAppContext();
+  const queryClient = useQueryClient();
+  const { curBoardId, curTaskId, setCurTaskId } = useAppContext();
+  const { setIsModalOpen } = useContext(ModalContext);
 
   const {
     error,
@@ -82,6 +82,7 @@ export default function NewAndEditTask({
       onSuccess: (data) => {
         console.log("Task edited successfully", data);
         setIsModalOpen(false);
+        setCurTaskId("");
         queryClient.invalidateQueries({ queryKey: ["tasks"] });
       },
       onError: (error) => {
@@ -112,8 +113,6 @@ export default function NewAndEditTask({
       await api.getColumnNames(parsedUser.userID, curBoardId),
   });
 
-  console.log(columnNames, "columnNames");
-
   const [taskData, setTaskData] = useState<TaskData>(
     isEdit
       ? task
@@ -123,10 +122,13 @@ export default function NewAndEditTask({
           current_status: columnNames?.at(0)?.column_name,
           subtasks: [],
           parent_board_id: "",
+          completed_subtasks: "",
         },
   );
 
-  console.log(taskData?.subtasks, "taskData");
+  const isSubtaskEmpty = taskData?.subtasks?.every(
+    (subtask) => subtask?.title !== "",
+  );
 
   const handleChange = (
     key: keyof TaskData,
@@ -140,22 +142,22 @@ export default function NewAndEditTask({
   };
 
   const handleDeleteTask = (id: string) => {
-    setTaskData((prevState) => ({
-      ...prevState,
-      subtasks: prevState?.subtasks.filter((el) => el.id !== id),
-    }));
+    setTaskData({
+      ...taskData,
+      subtasks: taskData?.subtasks.filter((el) => el.id !== id),
+    });
   };
 
   const handleAddNewSubtask = () => {
     setTaskData((prevState) => ({
       ...prevState,
       subtasks: [
-        ...prevState?.subtasks,
+        ...(prevState?.subtasks || []),
         {
           id: (prevState?.subtasks?.at(-1)?.id + 1 || 1)?.toString(),
           title: "",
           completed: false,
-          parent_task_id: "",
+          parent_task_id: curTaskId,
         },
       ],
     }));
@@ -163,11 +165,11 @@ export default function NewAndEditTask({
 
   const handleConfirmClick = () => {
     const body = {
-      subtasks: [],
       title: taskData?.title,
       description: taskData?.description,
       current_status: taskData?.current_status,
       parent_board_id: taskData?.parent_board_id || curBoardId,
+      subtasks: taskData?.subtasks?.map((subtask) => subtask?.title),
     };
 
     isEdit
@@ -258,7 +260,6 @@ export default function NewAndEditTask({
           onClick={() => setIsTaskStatusItemsShow((prevState) => !prevState)}
         >
           {taskData?.current_status}
-          {/* {tasksData[0]?.current} */}
           {isTaskStatusItemsShow ? (
             <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -304,7 +305,11 @@ export default function NewAndEditTask({
         )}
       </div>
       <Button
-        disabled={taskData?.title?.length === 0 || !taskData?.current_status}
+        disabled={
+          taskData?.title?.length === 0 ||
+          !taskData?.current_status ||
+          !isSubtaskEmpty
+        }
         text={isEdit ? "Save Changes" : "Create Task"}
         styles={
           "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey disabled:pointer-events-none disabled:opacity-50"

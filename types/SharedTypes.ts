@@ -9,10 +9,14 @@ export type BoardSchemaType = {
 };
 
 export type ColumnSchemaType = {
-  name: string;
-  color?: string;
-  user_id: string;
+  id: string;
+  color: string;
+  createdAt: string;
+  column_name: string;
+  tasks_count: number;
   parent_board_id: string;
+  updatedAt: string;
+  user_id: string;
 };
 
 export type ColumnNames = {
@@ -49,6 +53,7 @@ export type TaskData = {
   current_status: string;
   subtasks?: Subtask[];
   parent_board_id: string;
+  completed_subtasks: string;
   createdAt?: string; // "2024-04-14T23:26:41.554Z"
   updatedAt?: string; // "2024-04-14T23:26:41.554Z"
   id?: string;

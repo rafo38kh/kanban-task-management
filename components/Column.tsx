@@ -4,19 +4,10 @@ import { useAppContext } from "@/contexts/AppContextProvider";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useQuery } from "react-query";
 import api from "@/lib/api";
-import { TaskData } from "@/types/SharedTypes";
+import { ColumnSchemaType, TaskData } from "@/types/SharedTypes";
 
 type ColumnProps = {
-  column: {
-    id: string;
-    color: string;
-    createdAt: string;
-    column_name: string;
-    tasks_count: number;
-    parent_board_id: string;
-    updatedAt: string;
-    user_id: string;
-  };
+  column: ColumnSchemaType;
 };
 
 export default function Column({ column }: ColumnProps) {
@@ -46,8 +37,10 @@ export default function Column({ column }: ColumnProps) {
         {filtetedTaskData?.map((cardItem) => (
           <Card
             id={cardItem?.id}
+            key={cardItem?.id}
             title={cardItem?.title}
             subtaskCount={cardItem?.subtasks?.length}
+            completedSubtask={cardItem?.completed_subtasks}
           />
         ))}
       </ul>

@@ -1,5 +1,5 @@
 "use client";
-import { MouseEvent, useContext, useState } from "react";
+import { MouseEvent, useContext, useLayoutEffect, useState } from "react";
 import { ModalContext, ModalTypes } from "../../contexts/ModalContextProvider";
 import SubModal from "./SubModal";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -13,14 +13,14 @@ export default function MainChanges() {
   const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
 
   const queryClient = useQueryClient();
-  const { curBoardId, curTaskId } = useAppContext();
+  const { curBoardId, curTaskId, setCurTaskId } = useAppContext();
   const parsedUser = useGetUsersInfo();
 
   const { setClickTarget, setModalType, setIsModalOpen } =
     useContext(ModalContext);
 
   const {
-    error: editeError,
+    error: editError,
     isError: editIsError,
     isLoading: editIsLoading,
     mutate: editTask,
@@ -45,6 +45,7 @@ export default function MainChanges() {
       onSuccess: (data) => {
         console.log("Task edited successfully", data);
         setIsModalOpen(false);
+        setCurTaskId("");
         queryClient.invalidateQueries({ queryKey: ["tasks"] });
       },
       onError: (error) => {
@@ -75,6 +76,33 @@ export default function MainChanges() {
       await api.getTask(parsedUser.userID, curBoardId, curTaskId),
   });
 
+  const {
+    data: subtaskkData,
+    error: subtaskError,
+    mutate: subtaskMutate,
+    isError: subtaskIsError,
+    isLoading: subtaskIsLoading,
+  } = useMutation(
+    ({
+      userId,
+      body,
+    }: {
+      userId: string;
+      body: {
+        subtask_id: string;
+      };
+    }) => api.changeSubtask(userId, body),
+    {
+      onSuccess: (data) => {
+        console.log("subtask mutated successfully", data);
+        queryClient.invalidateQueries({ queryKey: ["task"] });
+      },
+      onError: (error) => {
+        console.error("Error mutating subtask:", error);
+      },
+    },
+  );
+
   const [taskState, setTaskState] = useState<TaskData>(
     taskData || {
       description: "",
@@ -82,18 +110,17 @@ export default function MainChanges() {
       current_status: "",
       subtasks: [],
       parent_board_id: "",
+      completed_subtasks: "",
     },
   );
 
-  console.log("taskData", taskData);
-
-  const handleConfirmClick = () => {
+  const handleConfirmClick = (status: string) => {
     const body = {
-      subtasks: [],
       title: taskState?.title,
       description: taskState?.description,
-      current_status: taskState?.current_status,
+      current_status: status,
       parent_board_id: taskState?.parent_board_id || curBoardId,
+      subtasks: taskState?.subtasks?.map((subtask) => subtask?.title),
     };
     editTask({ body, taskId: curTaskId, userId: parsedUser?.userID });
   };
@@ -115,6 +142,13 @@ export default function MainChanges() {
     setModalType(ModalTypes.DeleteTask);
   };
 
+  const handleCheckboxChange = (id: string) => {
+    subtaskMutate({
+      userId: parsedUser?.userID,
+      body: { subtask_id: id },
+    });
+  };
+
   return (
     <div className="relative">
       <div className="flex flex-row items-center justify-between gap-4">
@@ -134,7 +168,8 @@ export default function MainChanges() {
         {taskData?.description}
       </p>
       <span className="text-xs font-bold text-kanbanLightGrey">
-        Subtasks (2 of {taskData?.subtasks?.length})
+        Subtasks ({taskData?.completed_subtasks} of {taskData?.subtasks?.length}
+        )
       </span>
       <ul>
         {taskData?.subtasks?.map((subtask) => (
@@ -144,8 +179,9 @@ export default function MainChanges() {
           >
             <input
               type="checkbox"
-              className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
               checked={subtask?.completed}
+              onChange={() => handleCheckboxChange(subtask?.id)}
+              className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
             />
             <span className="text-xs font-bold text-kanbanLightGrey">
               {subtask?.title}
@@ -191,12 +227,12 @@ export default function MainChanges() {
                 <button
                   type="button"
                   onClick={() => {
-                    handleConfirmClick();
-                    setIsTaskStatusItemsShow(false);
                     setTaskState((prevState) => ({
                       ...prevState,
                       current_status: column?.column_name,
                     }));
+                    setIsTaskStatusItemsShow(false);
+                    handleConfirmClick(column?.column_name);
                   }}
                   className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
                 >

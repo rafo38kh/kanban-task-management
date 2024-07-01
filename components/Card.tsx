@@ -8,9 +8,15 @@ type CardProps = {
   id: string;
   title: string;
   subtaskCount: number;
+  completedSubtask: string;
 };
 
-export default function Card({ id, title, subtaskCount }: CardProps) {
+export default function Card({
+  id,
+  title,
+  subtaskCount,
+  completedSubtask,
+}: CardProps) {
   const { setIsModalOpen, setModalType } = useContext(ModalContext);
   const { setCurTaskId } = useAppContext();
 
@@ -24,9 +30,11 @@ export default function Card({ id, title, subtaskCount }: CardProps) {
       }}
       className="flex w-[17.5rem] flex-col items-start justify-center  gap-2 rounded-lg bg-white p-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:bg-kanbanGrey dark:hover:bg-kanbanDarkGrey"
     >
-      <h1 className="font-bold text-black dark:text-white">{title}</h1>
+      <h1 className="text-left font-bold text-black dark:text-white">
+        {title}
+      </h1>
       <span className="text-xs font-bold text-kanbanLightGrey">
-        {subtaskCount} of 3 substasks
+        {completedSubtask} of {subtaskCount} substasks
       </span>
     </button>
   );

@@ -193,7 +193,7 @@ export default function TopNavigation({
         <button
           disabled={!isAuth}
           type="button"
-          className="disabled:cursor-not-allowed"
+          className="p-4 disabled:cursor-not-allowed"
           onClick={(e) => handleOpenEditDeleteBoardBtns(e)}
         >
           <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">

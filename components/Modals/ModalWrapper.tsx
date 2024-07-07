@@ -1,4 +1,5 @@
 "use client";
+import useClickOutside from "@/hooks/useClickOutside";
 import { Dispatch, ReactNode, SetStateAction, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
@@ -22,9 +23,8 @@ export default function ModalWrapper({
       }
     };
 
-    handleBodyClass(); // Call once on mount to set initial state
+    handleBodyClass();
 
-    // Add/remove class on isOpen change
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
@@ -32,20 +32,7 @@ export default function ModalWrapper({
 
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      const handleClickOutsideModal = (event: MouseEvent) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
-          setIsOpen(false);
-        }
-      };
-
-      document.addEventListener("mousedown", handleClickOutsideModal);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutsideModal);
-      };
-    }
-  }, [isOpen, setIsOpen]);
+  useClickOutside(ref, () => setIsOpen(false));
 
   if (!isOpen) return null;
 

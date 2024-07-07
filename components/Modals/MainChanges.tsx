@@ -7,24 +7,25 @@ import { ColumnNames, TaskData } from "@/types/SharedTypes";
 import api from "@/lib/api";
 import { useAppContext } from "@/contexts/AppContextProvider";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+import { createPortal } from "react-dom";
 
 export default function MainChanges() {
-  const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
-  const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
-
-  const queryClient = useQueryClient();
   const { curBoardId, curTaskId, setCurTaskId } = useAppContext();
-  const parsedUser = useGetUsersInfo();
-
   const { setClickTarget, setModalType, setIsModalOpen } =
     useContext(ModalContext);
 
+  const queryClient = useQueryClient();
+  const parsedUser = useGetUsersInfo();
+
+  const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
+  const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
+
   const {
     error: editError,
-    isError: editIsError,
-    isLoading: editIsLoading,
     mutate: editTask,
     data: editTaskData,
+    isError: editIsError,
+    isLoading: editIsLoading,
   } = useMutation(
     ({
       userId,
@@ -105,10 +106,10 @@ export default function MainChanges() {
 
   const [taskState, setTaskState] = useState<TaskData>(
     taskData || {
-      description: "",
       title: "",
-      current_status: "",
       subtasks: [],
+      description: "",
+      current_status: "",
       parent_board_id: "",
       completed_subtasks: "",
     },
@@ -164,14 +165,14 @@ export default function MainChanges() {
           </svg>
         </button>
       </div>
-      <p className="my-6 break-words text-xs text-kanbanLightGrey">
+      <p className="my-6 max-h-52 overflow-scroll break-words text-xs text-kanbanLightGrey">
         {taskData?.description}
       </p>
       <span className="text-xs font-bold text-kanbanLightGrey">
         Subtasks ({taskData?.completed_subtasks} of {taskData?.subtasks?.length}
         )
       </span>
-      <ul>
+      <ul className="max-h-52 overflow-scroll">
         {taskData?.subtasks?.map((subtask) => (
           <li
             key={subtask?.id}
@@ -245,10 +246,10 @@ export default function MainChanges() {
       </div>
       {isEditDeletBoardModal && (
         <SubModal
-          handleEditModal={handleEditTaskModal}
-          handleDeletModal={handleDeletTaskModal}
           firstTextBtn={"Edit Task"}
           secondTextBtn={"Delete Task"}
+          handleEditModal={handleEditTaskModal}
+          handleDeletModal={handleDeletTaskModal}
         />
       )}
     </div>

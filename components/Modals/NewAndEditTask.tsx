@@ -25,9 +25,9 @@ export default function NewAndEditTask({
   const { setIsModalOpen } = useContext(ModalContext);
 
   const {
-    error,
-    isError,
-    isLoading,
+    error: postTaskError,
+    isError: postTaskIsError,
+    isLoading: postTaskIsLoading,
     mutate: postTask,
     data: postTaskData,
   } = useMutation(
@@ -57,10 +57,10 @@ export default function NewAndEditTask({
   );
 
   const {
+    mutate: editTask,
     error: editeError,
     isError: editIsError,
     isLoading: editIsLoading,
-    mutate: editTask,
     data: editTaskData,
   } = useMutation(
     ({
@@ -202,11 +202,10 @@ export default function NewAndEditTask({
           onChange={(e) => handleChange("description", e)}
         ></textarea>
       </div>
-      <div>
-        <span className="text-xs font-bold">Subtasks</span>
-
+      <span className=" text-xs font-bold">Subtasks</span>
+      <ul className="max-h-60 overflow-scroll">
         {taskData?.subtasks?.map((subtask) => (
-          <div
+          <li
             key={subtask?.id}
             className="mb-5 mt-2 flex flex-row items-center justify-between gap-4"
           >
@@ -241,15 +240,16 @@ export default function NewAndEditTask({
                 </g>
               </svg>
             </button>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
       <Button
-        disabled={false}
+        isLoading={false}
         text={"+ Add New Subtask"}
+        disabled={isEdit ? editIsLoading : postTaskIsLoading}
         onClick={handleAddNewSubtask}
         styles={
-          "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG"
+          "bg-kanbanVeryLightGrey text-kanbanPurpule transition-all duration-200 hover:bg-kanbanLightGreyBG disabled:pointer-events-none disabled:opacity-50 mt-4"
         }
       />
       <div className="relative my-6 flex flex-col gap-2">
@@ -304,7 +304,9 @@ export default function NewAndEditTask({
           </ul>
         )}
       </div>
+
       <Button
+        isLoading={isEdit ? editIsLoading : postTaskIsLoading}
         disabled={
           taskData?.title?.length === 0 ||
           !taskData?.current_status ||

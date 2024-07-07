@@ -6,25 +6,26 @@ import {
   ReactNode,
   createContext,
   SetStateAction,
+  useLayoutEffect,
 } from "react";
 
-import NewAndEditTask from "@/components/Modals/NewAndEditTask";
 import MainChanges from "@/components/Modals/MainChanges";
+import NewAndEditTask from "@/components/Modals/NewAndEditTask";
 import NewAndEditBoard from "@/components/Modals/NewAndEditBoard";
 import DeletBoardAndTask, {
   ModalBoardDeleteType,
 } from "@/components/Modals/DeletBoardAndTask";
 
 export enum ModalTypes {
-  Main = "main_modal", // ✅
-  NewTask = "new_task", // ✅
-  SubTask = "sub_task", //✅
-  SubBoard = "sub_board", // ✅
-  EditTask = "edit_task", // ✅
-  NewBoard = "new_board", // ✅
-  EditBoard = "edit_board", // ✅
-  DeleteTask = "delete_task", // ✅
-  DeleteBoard = "delete_board", // ✅
+  Main = "main_modal",
+  NewTask = "new_task",
+  SubTask = "sub_task",
+  SubBoard = "sub_board",
+  EditTask = "edit_task",
+  NewBoard = "new_board",
+  EditBoard = "edit_board",
+  DeleteTask = "delete_task",
+  DeleteBoard = "delete_board",
 }
 
 type ModalContext = {
@@ -54,8 +55,8 @@ export const ModalContext = createContext<ModalContext>({
 type ModalContextProvider = { children: ReactNode | ReactNode[] };
 
 const ModalContextProvider = ({ children }: ModalContextProvider) => {
-  const [isSideBarshow, setIsSideBarShow] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSideBarshow, setIsSideBarShow] = useState(false);
   const [modalType, setModalType] = useState<ModalTypes | null>(null);
   const [clickTarget, setClickTarget] = useState<HTMLElement | null>(null);
 

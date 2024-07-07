@@ -1,32 +1,35 @@
 "use client";
 
-import { ModalContext } from "@/contexts/ModalContextProvider";
 import { useContext } from "react";
 
+import { ModalContext } from "@/contexts/ModalContextProvider";
+
 type SubModalEditDeleteBtnsProps = {
-  handleEditModal: () => void;
-  handleDeletModal: () => void;
   firstTextBtn: string;
   secondTextBtn: string;
+  handleEditModal: () => void;
+  handleDeletModal: () => void;
 };
 
 export default function SubModal({
-  handleEditModal,
-  handleDeletModal,
   firstTextBtn,
   secondTextBtn,
+  handleEditModal,
+  handleDeletModal,
 }: SubModalEditDeleteBtnsProps) {
   const { clickTarget } = useContext(ModalContext);
 
   const rect = clickTarget?.getBoundingClientRect() as DOMRect;
 
+  // useClickOutside(clickTarget as any, () => setClickTarget(null));
+
   return (
     <div
       style={{
-        top: rect?.y + rect?.height + 10,
-        right: rect.x - rect.right + 10,
+        left: rect?.left - 150,
+        top: rect?.y + rect?.height + 20,
       }}
-      className="fixed right-0 top-0 z-30 flex w-40 flex-col items-start justify-center gap-2 rounded-lg bg-white p-4 dark:bg-kanbanDarkGreyBG"
+      className="fixed z-50 flex w-40 flex-col items-start justify-center gap-2 rounded-lg bg-white p-4 dark:bg-kanbanDarkGreyBG"
     >
       <button
         type="button"
@@ -36,8 +39,8 @@ export default function SubModal({
         {firstTextBtn}
       </button>
       <button
-        onClick={handleDeletModal}
         type="button"
+        onClick={handleDeletModal}
         className="text-sm font-bold text-kanbanRed"
       >
         {secondTextBtn}

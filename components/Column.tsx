@@ -30,9 +30,14 @@ export default function Column({ column }: ColumnProps) {
 
   return (
     <div className="flex h-full w-full flex-col gap-8">
-      <span className="min-w-80 px-4">
-        {column?.column_name} ({filtetedTaskData?.length})
-      </span>
+      <div className="flex min-w-80 items-center justify-start gap-2 px-4 text-sm uppercase text-kanbanLightGrey">
+        <span
+          style={{ backgroundColor: column?.color }}
+          className={`rounded-full p-2`}
+        />
+        <span className="tracking-widest">{column?.column_name}</span>
+        <span>({filtetedTaskData?.length})</span>
+      </div>
       <ul className="flex h-full flex-col  gap-4 overflow-y-scroll p-4 pt-0">
         {filtetedTaskData?.map((cardItem) => (
           <Card

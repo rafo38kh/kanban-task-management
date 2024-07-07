@@ -30,40 +30,42 @@ export default function DeletBoardAndTask({
 
   const queryClient = useQueryClient();
 
-  const { mutate: deleteBoardMutation } = useMutation(
-    ({ userId, boardId }: { userId: string; boardId: string }) =>
-      api.deleteBoard(userId, boardId!),
-    {
-      onSuccess: () => {
-        setIsModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["boardNames"] });
+  const { mutate: deleteBoardMutation, isLoading: deletBoardIsLOading } =
+    useMutation(
+      ({ userId, boardId }: { userId: string; boardId: string }) =>
+        api.deleteBoard(userId, boardId!),
+      {
+        onSuccess: () => {
+          setIsModalOpen(false);
+          queryClient.invalidateQueries({ queryKey: ["boardNames"] });
+        },
+        onError: (error) => {
+          console.error(
+            `Error deleting ${type === ModalBoardDeleteType.board ? "board" : "task"}:`,
+            error,
+          );
+        },
       },
-      onError: (error) => {
-        console.error(
-          `Error deleting ${type === ModalBoardDeleteType.board ? "board" : "task"}:`,
-          error,
-        );
-      },
-    },
-  );
+    );
 
-  const { mutate: deleteTaskMutation } = useMutation(
-    ({ userId, taskId }: { userId: string; taskId: string }) =>
-      api.deleteTask(userId, taskId!),
-    {
-      onSuccess: () => {
-        setIsModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["task"] });
-        console.log("Task deleted successfully");
+  const { mutate: deleteTaskMutation, isLoading: deleteTaskIsLoading } =
+    useMutation(
+      ({ userId, taskId }: { userId: string; taskId: string }) =>
+        api.deleteTask(userId, taskId!),
+      {
+        onSuccess: () => {
+          setIsModalOpen(false);
+          queryClient.invalidateQueries({ queryKey: ["task"] });
+          console.log("Task deleted successfully");
+        },
+        onError: (error) => {
+          console.error(
+            `Error deleting ${type === ModalBoardDeleteType.board ? "board" : "task"}:`,
+            error,
+          );
+        },
       },
-      onError: (error) => {
-        console.error(
-          `Error deleting ${type === ModalBoardDeleteType.board ? "board" : "task"}:`,
-          error,
-        );
-      },
-    },
-  );
+    );
 
   const boardTitle =
     type === ModalBoardDeleteType.task
@@ -79,6 +81,11 @@ export default function DeletBoardAndTask({
         cannot be reversed.
       </p>
       <Button
+        isLoading={
+          type === ModalBoardDeleteType.board
+            ? deletBoardIsLOading
+            : deleteTaskIsLoading
+        }
         disabled={false}
         text={"Delete"}
         styles={
@@ -97,6 +104,11 @@ export default function DeletBoardAndTask({
         }}
       />
       <Button
+        isLoading={
+          type === ModalBoardDeleteType.board
+            ? deletBoardIsLOading
+            : deleteTaskIsLoading
+        }
         disabled={false}
         text={"Cancel"}
         styles={

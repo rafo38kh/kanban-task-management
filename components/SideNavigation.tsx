@@ -14,7 +14,7 @@ import api from "@/lib/api";
 
 import SwitchTheme from "./SwitchTheme";
 
-import { BoardName, BoardSchemaType } from "@/types/SharedTypes";
+import { BoardName } from "@/types/SharedTypes";
 
 type SideNavigationProps = {
   setIsSideNavOpen: Dispatch<SetStateAction<boolean>>;

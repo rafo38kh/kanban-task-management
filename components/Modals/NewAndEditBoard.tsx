@@ -3,20 +3,24 @@
 import { ChangeEvent, useContext, useState } from "react";
 import Button from "../Button";
 import { ModalContext } from "@/contexts/ModalContextProvider";
+
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import api from "@/lib/api";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useAppContext } from "@/contexts/AppContextProvider";
 import { BoardName } from "@/types/SharedTypes";
+import ColumnInput from "../ColumnInput";
+import { v4 as uuidv4 } from "uuid";
+import { colorGenerator } from "@/hepler_functions/ColorGenerator";
 
-type Column = {
+export type Column = {
   id: string;
   color: string;
   column_name: string;
   parent_board_id: string;
 };
 
-type BoardData = {
+export type BoardData = {
   boardName: string;
   boardColumns: Column[];
 };
@@ -32,7 +36,7 @@ export default function NewAndEditBoard({
   boardTitle,
   boardBtnText,
 }: ModalBoardInformationProps) {
-  const { curBoardId, setCurBoardId } = useAppContext();
+  const { curBoardId, setCurBoardId, setCurTaskId } = useAppContext();
 
   const { setIsModalOpen } = useContext(ModalContext);
 
@@ -61,11 +65,11 @@ export default function NewAndEditBoard({
   });
 
   const {
-    error,
-    isError,
-    isLoading,
     mutate: postBoard,
     data: postBoardData,
+    error: postBoardError,
+    isError: postBoardIsError,
+    isLoading: postBoardIsLoading,
   } = useMutation(
     ({
       userId,
@@ -112,17 +116,15 @@ export default function NewAndEditBoard({
     {
       onSuccess: (data) => {
         console.log("Board edited successfully", data);
+        setCurTaskId("");
         setIsModalOpen(false);
-        setCurBoardId("");
-        queryClient.invalidateQueries({ queryKey: ["board"] });
+        queryClient.invalidateQueries({ queryKey: ["columns"] });
       },
       onError: (error) => {
         console.error("Error editing board:", error);
       },
     },
   );
-
-  console.log(editBoardData, "editBoardData");
 
   const [boardData, setBoardData] = useState<BoardData>(
     isEdit
@@ -142,7 +144,7 @@ export default function NewAndEditBoard({
             },
             {
               id: "2",
-              color: "green",
+              color: "purple",
               column_name: "column 2",
               parent_board_id: "",
             },
@@ -150,7 +152,7 @@ export default function NewAndEditBoard({
         },
   );
 
-  console.log(boardData?.boardColumns, "boardData?.boardColumns");
+  console.log("boardData", boardData);
 
   const isColumnNameEmpty = boardData?.boardColumns?.every(
     (names) => names?.column_name !== "",
@@ -173,13 +175,11 @@ export default function NewAndEditBoard({
       boardColumns: [
         ...prevState?.boardColumns,
         {
-          id: isEdit
-            ? ""
-            : (prevState?.boardColumns?.at(-1)?.id + 1 || 1)?.toString(),
-          color: "",
+          id: uuidv4(),
+          color: colorGenerator(),
           column_name: "",
           parent_board_id: curBoardId,
-          // user_id: parsedUser!.userID,
+          user_id: parsedUser!.userID,
         },
       ],
     }));
@@ -189,6 +189,16 @@ export default function NewAndEditBoard({
     setBoardData((prevState) => ({
       ...prevState,
       boardColumns: [...prevState?.boardColumns.filter((el) => el.id !== id)],
+    }));
+  };
+
+  const handleInputOnChange = (e, column: Column) => {
+    const updatedBoardColumn = boardData?.boardColumns?.map((item) =>
+      item.id === column.id ? { ...item, column_name: e.target.value } : item,
+    );
+    setBoardData((prevState) => ({
+      ...prevState,
+      boardColumns: updatedBoardColumn,
     }));
   };
 
@@ -208,45 +218,17 @@ export default function NewAndEditBoard({
       <span className="text-xs font-bold">Board Columns</span>
       <ul className="max-h-64 overflow-y-scroll pr-4">
         {boardData?.boardColumns?.map((column) => (
-          <li
-            key={column?.id}
-            className="mb-5 mt-2 flex flex-row items-center justify-between gap-4"
-          >
-            <input
-              value={column?.column_name}
-              className="w-full rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
-              type="text"
-              placeholder="e.g. Make coffee"
-              onChange={(e) => {
-                const updatedBoardColumn = boardData?.boardColumns?.map(
-                  (item) =>
-                    item.id === column.id
-                      ? { ...item, column_name: e.target.value }
-                      : item,
-                );
-                setBoardData((prevState) => ({
-                  ...prevState,
-                  boardColumns: updatedBoardColumn,
-                }));
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => {
-                handleDeletColumn(column?.id);
-              }}
-            >
-              <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                <g fill="#828FA3" fillRule="evenodd">
-                  <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-                  <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-                </g>
-              </svg>
-            </button>
-          </li>
+          <ColumnInput
+            column={column}
+            boardData={boardData}
+            setBoardData={setBoardData}
+            handleDeletColumn={handleDeletColumn}
+            handleInputOnChange={handleInputOnChange}
+          />
         ))}
       </ul>
       <Button
+        isLoading={isEdit ? isEditBoard : postBoardIsLoading}
         disabled={false}
         text={"+ Add New Column"}
         onClick={handleAddNewColumn}
@@ -256,11 +238,9 @@ export default function NewAndEditBoard({
       />
       <span className="h-6 w-full"></span>
       <Button
+        isLoading={isEdit ? isEditBoard : postBoardIsLoading}
         disabled={boardData?.boardName?.length === 0 || !isColumnNameEmpty}
         text={boardBtnText}
-        // styles={
-        //   "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey"
-        // }
         styles={
           "bg-kanbanPurpule hover:bg-kanbanPurpuleHover transition-all duration-200 text-kanbanVeryLightGrey disabled:pointer-events-none disabled:opacity-50"
         }
@@ -272,14 +252,6 @@ export default function NewAndEditBoard({
                 body: {
                   board_name: boardData?.boardName,
                   columns: boardData?.boardColumns,
-                  // columns: [
-                  //   {
-                  //     id: "1",
-                  //     color: "red",
-                  //     column_name: "test edit",
-                  //     parent_board_id: curBoardId,
-                  //   },
-                  // ],
                 },
               })
             : postBoard({

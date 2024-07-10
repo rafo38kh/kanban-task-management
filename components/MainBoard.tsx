@@ -16,7 +16,7 @@ export default function MainBoard({}: MainBoardProps) {
     useContext(ModalContext);
 
   return (
-    <>
+    <div className="overflow-hidden overflow-x-auto">
       {isAuth ? (
         <>
           <ColumnsList />
@@ -27,6 +27,6 @@ export default function MainBoard({}: MainBoardProps) {
       ) : (
         <SignIn />
       )}
-    </>
+    </div>
   );
 }

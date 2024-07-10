@@ -35,14 +35,14 @@ export default function ColumnsList() {
   };
 
   return (
-    <ul className="relative flex h-screen w-full gap-4 overflow-scroll p-4">
+    <ul className="relative flex h-screen w-full gap-4 p-4">
       {columnsData?.map((column) => (
         <li key={column?.id} className="h-full max-w-[17.5rem]">
           <Column column={column} />
         </li>
       ))}
 
-      <li className="flex h-full w-[17.5rem] items-center justify-center">
+      <li className="flex h-full w-[17.5rem] items-center justify-center pr-4">
         <button
           type="button"
           className="mt-auto h-[calc(100%_-_3.3rem)] w-[17.5rem] rounded-lg bg-kanbanVeryLightGrey font-bold text-kanbanLightGrey transition-all duration-200 hover:text-kanbanPurpule dark:bg-[#23242f]"

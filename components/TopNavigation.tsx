@@ -7,7 +7,6 @@ import {
   SetStateAction,
   useLayoutEffect,
 } from "react";
-import Image from "next/image";
 import { useTheme } from "next-themes";
 
 import { AuthContext } from "@/contexts/AuthContextProvider";
@@ -108,8 +107,8 @@ export default function TopNavigation({
   };
 
   return (
-    <div className="flex h-full w-full flex-shrink-0 items-center justify-between border border-transparent border-b-kanbanVeryLightGrey bg-white p-4 py-7  dark:border-b-kanbanGrey dark:bg-kanbanDarkGrey ">
-      <div className="flex w-full items-baseline justify-start gap-4">
+    <div className="flex h-full w-full flex-shrink-0 items-center justify-between border border-transparent border-b-kanbanVeryLightGrey bg-white p-4 py-7 dark:border-b-kanbanGrey dark:bg-kanbanDarkGrey">
+      <div className="flex w-full items-center justify-start gap-4 md:items-baseline">
         {!isSideNavOpen && theme === "dark" ? getDarkLogo() : getLightLogo()}
         <svg
           className="md:hidden"
@@ -155,46 +154,6 @@ export default function TopNavigation({
         </button>
       </div>
       <div className="flex items-center justify-center gap-2 md:gap-6">
-        {isAuth && (
-          <div className="flex flex-row items-center gap-2 md:hidden">
-            <div className="aspect-square w-9 overflow-hidden rounded-full lg:flex">
-              {parsedUser?.profilePhoto && (
-                <Image
-                  height={100}
-                  width={100}
-                  alt="Picture of the author"
-                  src={parsedUser?.profilePhoto}
-                />
-              )}
-            </div>
-            <button
-              onClick={logOut}
-              className="whitespace-nowrap stroke-kanbanLightGrey transition-all duration-200 hover:stroke-black dark:hover:stroke-white"
-            >
-              <svg
-                fill="none"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H15"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M19 12L15 8M19 12L15 16M19 12H9"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-            </button>
-          </div>
-        )}
-
         <button
           disabled={!isAuth}
           type="button"

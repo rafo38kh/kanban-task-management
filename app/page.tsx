@@ -14,12 +14,11 @@ export default function Home() {
 
   return (
     <div
-      className={`grid min-h-screen w-full grid-rows-[auto_1fr] overflow-hidden
-      ${isSideNavOpen ? "grid-cols-[auto_1fr]" : "grid-cols-1"}`}
+      className={`grid min-h-screen w-full grid-rows-[auto_1fr] overflow-hidden ${isSideNavOpen ? "grid-cols-[auto_1fr]" : "grid-cols-1"}`}
     >
       {isSideNavOpen && <SideNavigation setIsSideNavOpen={setIsSideNavOpen} />}
 
-      <div className="flex h-screen w-full flex-col overflow-x-scroll">
+      <div className="flex h-screen w-full flex-col overflow-x-scroll overflow-y-scroll">
         <Navigations isSideNavOpen={isSideNavOpen} />
         <MainBoard />
         {!isSideNavOpen && (

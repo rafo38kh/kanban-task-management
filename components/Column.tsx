@@ -47,7 +47,7 @@ export default function Column({ column }: ColumnProps) {
   );
 
   return (
-    <div className="flex h-[calc(100vh_-_100px)] w-full flex-col gap-8">
+    <div className="flex h-[calc(100%_-_110px)] w-full flex-col gap-8">
       {isTasksLoading || isBoardNameLoading ? (
         <>
           <div className="flex min-w-80 animate-pulse items-center justify-start gap-2 px-4 text-sm uppercase text-kanbanLightGrey">
@@ -76,7 +76,7 @@ export default function Column({ column }: ColumnProps) {
             <span className="tracking-widest">{column?.column_name}</span>
             <span>({filteredTaskData?.length})</span>
           </div>
-          <ul className="overflow-y-scrollpt-0 flex h-full flex-col gap-4">
+          <ul className="flex h-full flex-col gap-4 overflow-y-scroll pt-0">
             {filteredTaskData?.length ? (
               filteredTaskData.map((cardItem) => (
                 <Card

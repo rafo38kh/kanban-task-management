@@ -17,6 +17,8 @@ type AppContext = {
   setCurBoardId: Dispatch<SetStateAction<string>>;
   curTaskId: string;
   setCurTaskId: Dispatch<SetStateAction<string>>;
+  currentColumnId: string;
+  setCurrentColumnId: Dispatch<SetStateAction<string>>;
 };
 
 const initialContext: AppContext = {
@@ -24,6 +26,8 @@ const initialContext: AppContext = {
   setCurBoardId: () => {},
   curTaskId: null,
   setCurTaskId: () => {},
+  currentColumnId: null,
+  setCurrentColumnId: () => {},
 };
 
 const AppContext = createContext(initialContext);
@@ -40,14 +44,17 @@ export const useAppContext = () => {
 export default function AppContextProvider({
   children,
 }: AppContextProviderProps) {
-  const [curBoardId, setCurBoardId] = useState("");
   const [curTaskId, setCurTaskId] = useState("");
+  const [curBoardId, setCurBoardId] = useState("");
+  const [currentColumnId, setCurrentColumnId] = useState("");
 
   const value: AppContext = {
     curBoardId,
     setCurBoardId,
     curTaskId,
     setCurTaskId,
+    currentColumnId,
+    setCurrentColumnId,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

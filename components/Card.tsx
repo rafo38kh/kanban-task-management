@@ -28,9 +28,9 @@ export default function Card({
         setIsModalOpen(true);
         setModalType(ModalTypes.Main);
       }}
-      className="flex w-[17.5rem] flex-col items-start justify-center  gap-2 rounded-lg bg-white p-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:bg-kanbanGrey dark:hover:bg-kanbanDarkGrey"
+      className="flex w-full flex-col items-start justify-center  gap-2 rounded-lg bg-white p-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:bg-kanbanGrey dark:hover:bg-kanbanDarkGrey"
     >
-      <h1 className="text-left font-bold text-black dark:text-white">
+      <h1 className="break-words text-left font-bold text-black dark:text-white">
         {title}
       </h1>
       <span className="text-xs font-bold text-kanbanLightGrey">

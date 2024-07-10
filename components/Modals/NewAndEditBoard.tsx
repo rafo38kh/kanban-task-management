@@ -84,7 +84,7 @@ export default function NewAndEditBoard({
       onSuccess: (data) => {
         console.log("Board created successfully", data);
         setIsModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["board"] });
+        queryClient.invalidateQueries({ queryKey: ["boardNames"] });
 
         setCurBoardId(data?.data?.newBoard?.id);
       },
@@ -129,30 +129,34 @@ export default function NewAndEditBoard({
   const [boardData, setBoardData] = useState<BoardData>(
     isEdit
       ? {
+          boardColumns: columnsData,
           boardName: bordNameData?.find((board) => board?.id === curBoardId)
             ?.name,
-          boardColumns: columnsData,
         }
       : {
           boardName: "",
           boardColumns: [
             {
               id: "1",
-              color: "red",
-              column_name: "column 1",
+              color: "#49C4E5",
+              column_name: "TODO",
               parent_board_id: "",
             },
             {
               id: "2",
-              color: "purple",
-              column_name: "column 2",
+              color: "#8471F2",
+              column_name: "DOING",
+              parent_board_id: "",
+            },
+            {
+              id: "3",
+              color: "#67E2AE",
+              column_name: "DONE",
               parent_board_id: "",
             },
           ],
         },
   );
-
-  console.log("boardData", boardData);
 
   const isColumnNameEmpty = boardData?.boardColumns?.every(
     (names) => names?.column_name !== "",
@@ -219,6 +223,7 @@ export default function NewAndEditBoard({
       <ul className="max-h-64 overflow-y-scroll pr-4">
         {boardData?.boardColumns?.map((column) => (
           <ColumnInput
+            key={column?.id}
             column={column}
             boardData={boardData}
             setBoardData={setBoardData}

@@ -52,7 +52,7 @@ export default function SideNavigation({
   const getLogo = (fillColor: string) => {
     return (
       <svg
-        className={`hidden h-28 w-full p-4 pt-[1.4rem] md:block`}
+        className={`hidden h-28 w-full p-4 pt-9 md:block`}
         width="153"
         height="26"
         xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@ export default function SideNavigation({
           <>
             <ul className="h-max max-h-[30rem] overflow-scroll">
               {isBoardNameLoading
-                ? Array?.from({ length: 3 })?.map((el, index) => (
+                ? Array?.from({ length: 3 })?.map((_, index) => (
                     <li
                       key={index}
                       className="flex w-full animate-pulse flex-row items-center justify-center gap-4 p-4"

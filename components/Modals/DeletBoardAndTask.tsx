@@ -55,7 +55,7 @@ export default function DeletBoardAndTask({
       {
         onSuccess: () => {
           setIsModalOpen(false);
-          queryClient.invalidateQueries({ queryKey: ["task"] });
+          queryClient.invalidateQueries({ queryKey: ["tasks"] });
           console.log("Task deleted successfully");
         },
         onError: (error) => {
@@ -76,48 +76,50 @@ export default function DeletBoardAndTask({
     <>
       <h1 className="text-xl font-bold text-kanbanRed">{boardTitle}</h1>
       <p className="my-6 text-xs font-bold text-kanbanLightGrey">
-        Are you sure you want to delete the{" "}
+        Are you sure you want to delete the{""}
         {type === ModalBoardDeleteType.task ? "task" : "board"}? This action
         cannot be reversed.
       </p>
-      <Button
-        isLoading={
-          type === ModalBoardDeleteType.board
-            ? deletBoardIsLOading
-            : deleteTaskIsLoading
-        }
-        disabled={false}
-        text={"Delete"}
-        styles={
-          "bg-kanbanRed text-kanbanVeryLightGrey hover:bg-kanbanRedHover transition-all duration-200 mb-8"
-        }
-        onClick={() => {
-          type === ModalBoardDeleteType.board
-            ? deleteBoardMutation({
-                userId: parsedUser!.userID,
-                boardId: curBoardId,
-              })
-            : deleteTaskMutation({
-                userId: parsedUser!.userID,
-                taskId: curTaskId,
-              });
-        }}
-      />
-      <Button
-        isLoading={
-          type === ModalBoardDeleteType.board
-            ? deletBoardIsLOading
-            : deleteTaskIsLoading
-        }
-        disabled={false}
-        text={"Cancel"}
-        styles={
-          "bg-kanbanVeryLightGrey text-kanbanPurpule hover:bg-white transition-all duration-200 dark:hover:bg-kanbanLightGreyBG"
-        }
-        onClick={() => {
-          setIsModalOpen(false);
-        }}
-      />
+      <div className="md:flex md:flex-row md:items-center md:justify-center md:gap-4">
+        <Button
+          isLoading={
+            type === ModalBoardDeleteType.board
+              ? deletBoardIsLOading
+              : deleteTaskIsLoading
+          }
+          disabled={false}
+          text={"Delete"}
+          styles={
+            "bg-kanbanRed text-kanbanVeryLightGrey hover:bg-kanbanRedHover transition-all duration-200 mb-8 md:m-0"
+          }
+          onClick={() => {
+            type === ModalBoardDeleteType.board
+              ? deleteBoardMutation({
+                  userId: parsedUser!.userID,
+                  boardId: curBoardId,
+                })
+              : deleteTaskMutation({
+                  userId: parsedUser!.userID,
+                  taskId: curTaskId,
+                });
+          }}
+        />
+        <Button
+          isLoading={
+            type === ModalBoardDeleteType.board
+              ? deletBoardIsLOading
+              : deleteTaskIsLoading
+          }
+          disabled={false}
+          text={"Cancel"}
+          styles={
+            "bg-kanbanVeryLightGrey text-kanbanPurpule hover:bg-white transition-all duration-200 dark:hover:bg-kanbanLightGreyBG"
+          }
+          onClick={() => {
+            setIsModalOpen(false);
+          }}
+        />
+      </div>
     </>
   );
 }

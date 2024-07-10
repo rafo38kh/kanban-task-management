@@ -1,12 +1,17 @@
 "use client";
 import { ChangeEvent, useContext, useState } from "react";
-import { useAppContext } from "@/contexts/AppContextProvider";
-import Button from "../Button";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+
 import api from "@/lib/api";
-import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
-import { ColumnNames, TaskData } from "@/types/SharedTypes";
+
+import { useAppContext } from "@/contexts/AppContextProvider";
 import { ModalContext } from "@/contexts/ModalContextProvider";
+
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+
+import Button from "../Button";
+
+import { ColumnNames, TaskData } from "@/types/SharedTypes";
 
 type ModalTaskInformationProps = {
   isEdit: boolean;
@@ -17,79 +22,19 @@ export default function NewAndEditTask({
   isEdit,
   boardTitle,
 }: ModalTaskInformationProps) {
-  const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
+  const { setIsModalOpen } = useContext(ModalContext);
+  const {
+    curTaskId,
+    curBoardId,
+    setCurTaskId,
+    currentColumnId,
+    setCurrentColumnId,
+  } = useAppContext();
 
   const parsedUser = useGetUsersInfo();
   const queryClient = useQueryClient();
-  const { curBoardId, curTaskId, setCurTaskId } = useAppContext();
-  const { setIsModalOpen } = useContext(ModalContext);
 
-  const {
-    error: postTaskError,
-    isError: postTaskIsError,
-    isLoading: postTaskIsLoading,
-    mutate: postTask,
-    data: postTaskData,
-  } = useMutation(
-    ({
-      userId,
-      body,
-    }: {
-      userId: string;
-      body: {
-        title: string;
-        description: string;
-        current_status: string;
-        parent_board_id: string;
-        subtasks?: string[];
-      };
-    }) => api.postTask(userId, body),
-    {
-      onSuccess: (data) => {
-        console.log("Task created successfully", data);
-        setIsModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      },
-      onError: (error) => {
-        console.error("Error creating task:", error);
-      },
-    },
-  );
-
-  const {
-    mutate: editTask,
-    error: editeError,
-    isError: editIsError,
-    isLoading: editIsLoading,
-    data: editTaskData,
-  } = useMutation(
-    ({
-      userId,
-      taskId,
-      body,
-    }: {
-      userId: string;
-      taskId: string;
-      body: {
-        title: string;
-        description: string;
-        current_status: string;
-        parent_board_id: string;
-        subtasks?: string[];
-      };
-    }) => api.editTask(userId, taskId, body),
-    {
-      onSuccess: (data) => {
-        console.log("Task edited successfully", data);
-        setIsModalOpen(false);
-        setCurTaskId("");
-        queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      },
-      onError: (error) => {
-        console.error("Error editing task:", error);
-      },
-    },
-  );
+  const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
 
   const {
     data: task,
@@ -113,13 +58,85 @@ export default function NewAndEditTask({
       await api.getColumnNames(parsedUser.userID, curBoardId),
   });
 
+  const {
+    mutate: postTask,
+    data: postTaskData,
+    error: postTaskError,
+    isError: postTaskIsError,
+    isLoading: postTaskIsLoading,
+  } = useMutation(
+    ({
+      userId,
+      body,
+    }: {
+      userId: string;
+      body: {
+        title: string;
+        description: string;
+        current_status: string;
+        parent_board_id: string;
+        subtasks?: string[];
+      };
+    }) => api.postTask(userId, body),
+    {
+      onSuccess: (data) => {
+        console.log("Task created successfully", data);
+        setIsModalOpen(false);
+        setCurrentColumnId("");
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      },
+      onError: (error) => {
+        console.error("Error creating task:", error);
+      },
+    },
+  );
+
+  const {
+    mutate: editTask,
+    error: editeError,
+    data: editTaskData,
+    isError: editIsError,
+    isLoading: editIsLoading,
+  } = useMutation(
+    ({
+      userId,
+      taskId,
+      body,
+    }: {
+      userId: string;
+      taskId: string;
+      body: {
+        title: string;
+        description: string;
+        current_status: string;
+        parent_board_id: string;
+        subtasks?: string[];
+      };
+    }) => api.editTask(userId, taskId, body),
+    {
+      onSuccess: (data) => {
+        console.log("Task edited successfully", data);
+        setIsModalOpen(false);
+        setCurTaskId("");
+        setCurrentColumnId("");
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      },
+      onError: (error) => {
+        console.error("Error editing task:", error);
+      },
+    },
+  );
+
   const [taskData, setTaskData] = useState<TaskData>(
     isEdit
       ? task
       : {
           description: "",
           title: "",
-          current_status: columnNames?.at(0)?.column_name,
+          current_status: currentColumnId
+            ? columnNames?.find((column) => column?.id === currentColumnId)
+                ?.column_name
+            : columnNames?.at(0)?.column_name,
           subtasks: [],
           parent_board_id: "",
           completed_subtasks: "",
@@ -193,21 +210,21 @@ export default function NewAndEditTask({
       <div className="mb-6 flex flex-col gap-2">
         <span className="text-xs font-bold">Description</span>
         <textarea
-          value={taskData?.description}
           rows={4}
+          value={taskData?.description}
+          onChange={(e) => handleChange("description", e)}
           className="mt-2 rounded-md border-[1px] border-kanbanLightGrey bg-transparent p-2 text-xs"
           placeholder="e.g. It’s always good to take a break. This
           15 minute break will  recharge the batteries
           a little."
-          onChange={(e) => handleChange("description", e)}
-        ></textarea>
+        />
       </div>
-      <span className=" text-xs font-bold">Subtasks</span>
-      <ul className="max-h-60 overflow-scroll">
+      <span className="text-xs font-bold">Subtasks</span>
+      <ul className="mt-4 flex max-h-60 w-full flex-col items-center justify-between gap-3 overflow-scroll">
         {taskData?.subtasks?.map((subtask) => (
           <li
             key={subtask?.id}
-            className="mb-5 mt-2 flex flex-row items-center justify-between gap-4"
+            className="flex w-full flex-row items-center justify-between gap-4"
           >
             <input
               type="text"
@@ -259,7 +276,10 @@ export default function NewAndEditTask({
           className="flex items-center justify-between rounded-md border border-kanbanLightGrey p-[0.44rem] text-left"
           onClick={() => setIsTaskStatusItemsShow((prevState) => !prevState)}
         >
-          {taskData?.current_status}
+          {currentColumnId
+            ? columnNames?.find((column) => column?.id === currentColumnId)
+                ?.column_name
+            : taskData?.current_status}
           {isTaskStatusItemsShow ? (
             <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -282,7 +302,7 @@ export default function NewAndEditTask({
         </button>
         {isTaskStatusItemsShow && (
           <ul
-            className={`absolute top-16 z-50 grid h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-kanbanDarkGrey p-4`}
+            className={`absolute top-16 z-50 grid h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-white p-4 dark:bg-kanbanDarkGrey`}
           >
             {columnNames?.map((column) => (
               <li key={column?.id}>
@@ -295,7 +315,7 @@ export default function NewAndEditTask({
                       current_status: column?.column_name,
                     }));
                   }}
-                  className="h-max w-full rounded-md border border-kanbanLightGrey p-[0.44rem] px-4 text-left"
+                  className="h-max w-full rounded-md p-[0.44rem] px-4 text-left text-kanbanLightGrey hover:text-kanbanGrey dark:hover:text-kanbanLightGreyBG"
                 >
                   {column?.column_name}
                 </button>

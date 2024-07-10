@@ -6,12 +6,31 @@ import { AuthContext } from "@/contexts/AuthContextProvider";
 import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
 
 import SwitchTheme from "./SwitchTheme";
+import { useQuery } from "react-query";
+import { BoardName } from "@/types/SharedTypes";
+import api from "@/lib/api";
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+import { useAppContext } from "@/contexts/AppContextProvider";
 
 export default function MobileNavigation() {
   const { isAuth } = useContext(AuthContext);
+  const parsedUser = useGetUsersInfo();
+  const { curBoardId, setCurBoardId } = useAppContext();
 
   const { setIsModalOpen, setModalType, setIsSideBarShow } =
     useContext(ModalContext);
+
+  const {
+    data: bordNameData,
+    error: boardNameError,
+    isError: isBoardNameError,
+    isLoading: isBoardNameLoading,
+  } = useQuery<BoardName[]>({
+    queryKey: ["boardNames"],
+    queryFn: async () => await api.getBoardNames(parsedUser!.userID),
+  });
+
+  console.log(bordNameData, "bordNameData");
 
   const handleAddNewBoard = () => {
     setIsSideBarShow(false);
@@ -19,26 +38,21 @@ export default function MobileNavigation() {
     setModalType(ModalTypes.NewBoard);
   };
 
-  const boards = [
-    { boardName: "Platform Launch" },
-    { boardName: "Marketing Plan" },
-    { boardName: "Roadmap" },
-  ];
-
   return createPortal(
     <div className="absolute left-14 top-20 z-50 flex w-[16.5rem] flex-col items-center justify-start rounded-lg bg-white p-4 pl-0 dark:bg-kanbanGrey">
       <div>
         <div className="flex items-center justify-start gap-2 p-4 pt-2 font-bold tracking-widest text-kanbanLightGrey">
           <span className="uppercase ">All boards</span>
-          <span>(1)</span>
+          <span>{bordNameData?.length}</span>
         </div>
         {isAuth && (
           <>
             <ul>
-              {boards.map((board, idx) => (
+              {bordNameData.map((board) => (
                 <button
+                  onClick={() => setCurBoardId(board?.id)}
                   type="button"
-                  key={idx}
+                  key={board?.id}
                   className=" h-full w-full rounded-r-full  py-3 pl-4"
                 >
                   <li className="flex flex-row items-center justify-start gap-2">
@@ -52,9 +66,7 @@ export default function MobileNavigation() {
                         fill="#828FA3"
                       />
                     </svg>
-                    <span className="text-kanbanLightGrey">
-                      {board.boardName}
-                    </span>
+                    <span className="text-kanbanLightGrey">{board?.name}</span>
                   </li>
                 </button>
               ))}

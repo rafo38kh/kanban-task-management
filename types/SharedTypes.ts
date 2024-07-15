@@ -1,3 +1,11 @@
+export type Board = {
+  name: string;
+  user_id: string;
+  createdAt?: string;
+  updatedAt?: string;
+  id: string;
+};
+
 export type BoardName = {
   id: string;
   name: string;

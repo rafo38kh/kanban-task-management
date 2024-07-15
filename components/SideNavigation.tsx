@@ -52,7 +52,7 @@ export default function SideNavigation({
   const getLogo = (fillColor: string) => {
     return (
       <svg
-        className={`hidden h-28 w-full p-4 pt-9 md:block`}
+        className={`hidden h-28 w-full p-4 pt-[2.38rem] md:block`}
         width="153"
         height="26"
         xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ export default function SideNavigation({
   };
 
   return (
-    <div className="hidden h-screen w-[16.5rem] flex-shrink-0 flex-col items-start justify-between border border-transparent  border-r-kanbanVeryLightGrey bg-white transition-all duration-200 dark:border-r-kanbanGrey dark:bg-kanbanDarkGrey md:flex">
+    <div className="hidden h-screen w-[16.5rem] flex-shrink-0 flex-col items-start justify-between border border-transparent border-r-kanbanVeryLightGrey bg-white transition-all duration-200 dark:border-r-kanbanGrey dark:bg-kanbanDarkGrey md:flex">
       <div className="h-[calc(100%_-16.375rem)]">
         {getLogo(theme === "dark" ? "#F4F7FD" : "#000112")}
         <div className="flex items-center justify-start gap-2 p-4 pt-2 font-bold tracking-widest text-kanbanLightGrey">
@@ -99,11 +99,11 @@ export default function SideNavigation({
                       type="button"
                       key={board?.id}
                       onClick={() => setCurBoardId(board?.id)}
-                      className={`group  w-5/6 rounded-r-full py-3 pl-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:hover:bg-white ${curBoardId === board?.id ? "bg-kanbanVeryLightGrey dark:bg-white" : ""}`}
+                      className={`group w-5/6 rounded-r-full py-3 pl-4 transition-all duration-200 hover:bg-kanbanVeryLightGrey dark:hover:bg-white ${curBoardId === board?.id ? "bg-kanbanVeryLightGrey dark:bg-white" : ""}`}
                     >
-                      <li className="flex flex-row items-center justify-start gap-2">
+                      <li className="flex max-w-56 flex-row items-center justify-start gap-2">
                         <svg
-                          className="transition-all duration-200 group-hover:stroke-kanbanPurpule"
+                          className="flex-shrink-0 transition-all duration-200 group-hover:stroke-kanbanPurpule"
                           width="16"
                           height="16"
                           xmlns="http://www.w3.org/2000/svg"
@@ -123,10 +123,10 @@ export default function SideNavigation({
             <button
               onClick={handleAddNewBoard}
               type="button"
-              className="group flex items-center justify-start gap-2 p-4 text-kanbanPurpule transition-all  duration-200  hover:text-kanbanPurpuleHover"
+              className="group flex items-center justify-start gap-2 p-4 text-kanbanPurpule transition-all duration-200 hover:text-kanbanPurpuleHover"
             >
               <svg
-                className="stroke-kanbanPurpule transition-all duration-200  group-hover:stroke-kanbanPurpuleHover"
+                className="stroke-kanbanPurpule transition-all duration-200 group-hover:stroke-kanbanPurpuleHover"
                 width="16"
                 height="16"
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +143,7 @@ export default function SideNavigation({
           <div
             className={`flex w-full flex-row items-center justify-between p-4`}
           >
-            <div className="flex  flex-row items-center gap-2">
+            <div className="flex flex-row items-center gap-2">
               <div className="aspect-square w-9 overflow-hidden rounded-full lg:flex">
                 {parsedUser?.profilePhoto && (
                   <Image
@@ -187,7 +187,7 @@ export default function SideNavigation({
             </button>
           </div>
         )}
-        <div className=" w-full rounded-lg bg-kanbanLightGreyBG px-6 py-2 text-center dark:bg-kanbanDarkGreyBG">
+        <div className="w-full rounded-lg bg-kanbanLightGreyBG px-6 py-2 text-center dark:bg-kanbanDarkGreyBG">
           <SwitchTheme />
         </div>
         <button

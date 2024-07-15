@@ -47,63 +47,42 @@ export default function Column({ column }: ColumnProps) {
   );
 
   return (
-    <div className="flex h-[calc(100%_-_110px)] w-full flex-col gap-8">
-      {isTasksLoading || isBoardNameLoading ? (
-        <>
-          <div className="flex min-w-80 animate-pulse items-center justify-start gap-2 px-4 text-sm uppercase text-kanbanLightGrey">
-            <span className="rounded-full bg-slate-600 p-2" />
-            <span className="w-1/3 rounded-lg bg-slate-600 p-2" />
-          </div>
-          <ul className="flex h-full flex-col gap-4 overflow-y-scroll pt-0">
-            {Array.from({ length: 6 }).map((_, idx) => (
-              <li
-                key={idx}
-                className="flex w-[17.5rem] animate-pulse flex-col items-start justify-center gap-2 rounded-lg bg-kanbanVeryLightGrey p-4 transition-all duration-200 dark:bg-kanbanDarkGrey"
-              >
-                <span className="w-1/3 rounded-lg bg-slate-600 p-2" />
-                <span className="w-1/2 rounded-full bg-slate-600 p-2" />
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <>
-          <div className="flex min-w-[17.5rem] items-center justify-start gap-2 text-sm uppercase text-kanbanLightGrey">
-            <span
-              style={{ backgroundColor: column?.color }}
-              className="rounded-full p-2"
+    <>
+      <div className="mb-4 flex min-w-[17.5rem] items-center justify-start gap-2 text-sm uppercase text-kanbanLightGrey">
+        <span
+          style={{ backgroundColor: column?.color }}
+          className="rounded-full p-2"
+        />
+        <span className="truncate tracking-widest">{column?.column_name}</span>
+        <span>({filteredTaskData?.length})</span>
+      </div>
+      <ul className="flex h-full flex-col gap-4 overflow-y-scroll pt-0">
+        {filteredTaskData?.length ? (
+          filteredTaskData.map((cardItem) => (
+            <Card
+              color={column?.color}
+              id={cardItem?.id}
+              key={cardItem?.id}
+              title={cardItem?.title}
+              subtaskCount={cardItem?.subtasks?.length}
+              completedSubtask={cardItem?.completed_subtasks}
             />
-            <span className="tracking-widest">{column?.column_name}</span>
-            <span>({filteredTaskData?.length})</span>
-          </div>
-          <ul className="flex h-full flex-col gap-4 overflow-y-scroll pt-0">
-            {filteredTaskData?.length ? (
-              filteredTaskData.map((cardItem) => (
-                <Card
-                  id={cardItem?.id}
-                  key={cardItem?.id}
-                  title={cardItem?.title}
-                  subtaskCount={cardItem?.subtasks?.length}
-                  completedSubtask={cardItem?.completed_subtasks}
-                />
-              ))
-            ) : (
-              <button
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setCurTaskId(curBoardId);
-                  setCurrentColumnId(column?.id);
-                  setModalType(ModalTypes.NewTask);
-                }}
-                type="button"
-                className="h-20 w-full rounded-lg bg-kanbanVeryLightGrey font-bold text-kanbanLightGrey transition-all duration-200 hover:text-kanbanPurpule dark:bg-[#23242f]"
-              >
-                + New Task
-              </button>
-            )}
-          </ul>
-        </>
-      )}
-    </div>
+          ))
+        ) : (
+          <button
+            onClick={() => {
+              setIsModalOpen(true);
+              setCurTaskId(curBoardId);
+              setCurrentColumnId(column?.id);
+              setModalType(ModalTypes.NewTask);
+            }}
+            type="button"
+            className="h-20 w-full rounded-lg bg-kanbanVeryLightGrey font-bold text-kanbanLightGrey transition-all duration-200 hover:text-kanbanPurpule dark:bg-[#23242f]"
+          >
+            + New Task
+          </button>
+        )}
+      </ul>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useContext, useRef } from "react";
+import { Dispatch, SetStateAction, useContext, useRef } from "react";
 import { useQuery } from "react-query";
 import { createPortal } from "react-dom";
 
@@ -40,6 +40,11 @@ export default function MobileNavigation() {
 
   useClickOutside(mobileMenuRef, () => setIsSideBarShow(false));
 
+  const handleChangeBoard = (board) => {
+    setCurBoardId(board?.id);
+    setIsSideBarShow(false);
+  };
+
   const handleAddNewBoard = () => {
     setIsSideBarShow(false);
     setIsModalOpen(true);
@@ -60,7 +65,7 @@ export default function MobileNavigation() {
           <ul className="h-full max-h-36 w-full overflow-scroll">
             {bordNameData?.map((board) => (
               <button
-                onClick={() => setCurBoardId(board?.id)}
+                onClick={() => handleChangeBoard(board)}
                 type="button"
                 key={board?.id}
                 className="h-full w-full rounded-r-full py-3"
@@ -69,6 +74,7 @@ export default function MobileNavigation() {
                   <svg
                     width="16"
                     height="16"
+                    className="flex-shrink-0"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
@@ -76,7 +82,9 @@ export default function MobileNavigation() {
                       fill="#828FA3"
                     />
                   </svg>
-                  <span className="text-kanbanLightGrey">{board?.name}</span>
+                  <span className="truncate text-kanbanLightGrey">
+                    {board?.name}
+                  </span>
                 </li>
               </button>
             ))}
@@ -112,11 +120,13 @@ export default function MobileNavigation() {
               />
             )}
           </div>
-          <span>{parsedUser?.name}</span>
+          <span className="text-xs font-bold text-kanbanLightGrey">
+            {parsedUser?.name}
+          </span>
         </div>
         <button
           onClick={logOut}
-          className="flex items-center justify-center gap-2 whitespace-nowrap stroke-kanbanLightGrey text-xs text-kanbanLightGrey transition-all duration-200 hover:stroke-black dark:hover:stroke-white"
+          className="flex items-center justify-center gap-2 whitespace-nowrap stroke-kanbanLightGrey text-xs text-kanbanLightGrey transition-all duration-200 hover:stroke-black hover:text-black dark:hover:stroke-white dark:hover:text-white"
         >
           Logout
           <svg

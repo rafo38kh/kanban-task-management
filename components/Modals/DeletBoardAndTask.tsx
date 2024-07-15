@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import api from "@/lib/api";
 
@@ -11,6 +11,7 @@ import { ModalContext } from "@/contexts/ModalContextProvider";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 import Button from "../Button";
+import { Board, BoardName } from "@/types/SharedTypes";
 
 export enum ModalBoardDeleteType {
   board = "board",
@@ -29,6 +30,16 @@ export default function DeletBoardAndTask({
   const { curBoardId, curTaskId } = useAppContext();
 
   const queryClient = useQueryClient();
+
+  const {
+    data: board,
+    error: boardError,
+    isError: isBoardError,
+    isLoading: isBoardLoading,
+  } = useQuery<Board>({
+    queryKey: ["board"],
+    queryFn: async () => await api.findeBoard(parsedUser!.userID, curBoardId),
+  });
 
   const { mutate: deleteBoardMutation, isLoading: deletBoardIsLOading } =
     useMutation(
@@ -76,9 +87,9 @@ export default function DeletBoardAndTask({
     <>
       <h1 className="text-xl font-bold text-kanbanRed">{boardTitle}</h1>
       <p className="my-6 text-xs font-bold text-kanbanLightGrey">
-        Are you sure you want to delete the{""}
-        {type === ModalBoardDeleteType.task ? "task" : "board"}? This action
-        cannot be reversed.
+        Are you sure you want to delete the{" "}
+        {type === ModalBoardDeleteType.task ? "task" : `${board?.name} board`}?
+        This action cannot be reversed.
       </p>
       <div className="md:flex md:flex-row md:items-center md:justify-center md:gap-4">
         <Button

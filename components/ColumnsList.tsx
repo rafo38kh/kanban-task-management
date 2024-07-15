@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useQuery } from "react-query";
 
 import api from "@/lib/api";
@@ -10,13 +10,31 @@ import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 import Column from "./Column";
 
-import { ColumnSchemaType } from "@/types/SharedTypes";
+import { BoardName, ColumnSchemaType } from "@/types/SharedTypes";
 
 export default function ColumnsList() {
   const { setIsModalOpen, setModalType } = useContext(ModalContext);
 
   const parsedUser = useGetUsersInfo();
-  const { curBoardId } = useAppContext();
+  const { curBoardId, setCurBoardId } = useAppContext();
+  const [isFirstLoad, setIsFirstLoad] = useState(false);
+
+  useQuery<BoardName[]>({
+    queryKey: ["boardNames"],
+    queryFn: async () => await api.getBoardNames(parsedUser!.userID),
+
+    onSettled: (data) => {
+      setIsFirstLoad(true);
+    },
+    onSuccess(data) {
+      if (!isFirstLoad) {
+        setCurBoardId(data?.at(0).id);
+      }
+    },
+    onError: (error) => {
+      console.error("", error);
+    },
+  });
 
   const {
     data: columnsData,
@@ -37,7 +55,7 @@ export default function ColumnsList() {
   return (
     <ul className="relative flex h-screen w-full gap-4 p-4">
       {columnsData?.map((column) => (
-        <li key={column?.id} className="h-full max-w-[17.5rem]">
+        <li key={column?.id} className="h-[calc(100%_-9rem)] max-w-[17.5rem]">
           <Column column={column} />
         </li>
       ))}

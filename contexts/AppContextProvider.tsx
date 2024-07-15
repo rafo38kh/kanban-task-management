@@ -1,11 +1,11 @@
 "use client";
 import {
   Dispatch,
-  SetStateAction,
   useState,
-  createContext,
-  useContext,
   ReactNode,
+  useContext,
+  createContext,
+  SetStateAction,
 } from "react";
 
 type AppContextProviderProps = {
@@ -49,10 +49,10 @@ export default function AppContextProvider({
   const [currentColumnId, setCurrentColumnId] = useState("");
 
   const value: AppContext = {
-    curBoardId,
-    setCurBoardId,
     curTaskId,
+    curBoardId,
     setCurTaskId,
+    setCurBoardId,
     currentColumnId,
     setCurrentColumnId,
   };

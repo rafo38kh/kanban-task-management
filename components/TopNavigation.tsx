@@ -1,5 +1,6 @@
 "use client";
 import {
+  useRef,
   useState,
   Dispatch,
   useContext,
@@ -8,11 +9,11 @@ import {
   useLayoutEffect,
 } from "react";
 import { useTheme } from "next-themes";
+import { createPortal } from "react-dom";
 
 import { AuthContext } from "@/contexts/AuthContextProvider";
-import { ModalContext, ModalTypes } from "../contexts/ModalContextProvider";
 
-import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+import { ModalContext, ModalTypes } from "@/contexts/ModalContextProvider";
 
 import SubModal from "./Modals/SubModal";
 
@@ -27,14 +28,18 @@ export default function TopNavigation({
   isSideNavOpen,
   setIsSideBarShow,
 }: TopNavigationProps) {
-  const { isAuth, logOut } = useContext(AuthContext);
+  const subModalRef = useRef(null);
+
+  const { isAuth } = useContext(AuthContext);
   const { setModalType, setIsModalOpen, setClickTarget } =
     useContext(ModalContext);
 
   const { theme } = useTheme();
-  const parsedUser = useGetUsersInfo();
 
+  const [isMounted, setIsMounted] = useState<boolean | null>(null);
   const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
+
+  useLayoutEffect(() => setIsMounted(true), []);
 
   const handleAddNewTask = () => {
     setIsModalOpen(true);
@@ -109,7 +114,9 @@ export default function TopNavigation({
   return (
     <div className="flex h-full w-full flex-shrink-0 items-center justify-between border border-transparent border-b-kanbanVeryLightGrey bg-white p-4 py-7 dark:border-b-kanbanGrey dark:bg-kanbanDarkGrey">
       <div className="flex w-full items-center justify-start gap-4 md:items-baseline">
-        {!isSideNavOpen && theme === "dark" ? getDarkLogo() : getLightLogo()}
+        {!isSideNavOpen &&
+          (isMounted && theme === "dark" ? getLightLogo() : getDarkLogo())}
+
         <svg
           className="md:hidden"
           width="24"
@@ -125,7 +132,6 @@ export default function TopNavigation({
         <span className="hidden text-2xl font-bold text-black dark:text-white md:inline-block">
           Platform Launch
         </span>
-
         <button
           onClick={() => setIsSideBarShow((prevState) => !prevState)}
           type="button"
@@ -175,8 +181,8 @@ export default function TopNavigation({
         </button>
 
         <button
-          disabled={!isAuth}
           type="button"
+          disabled={!isAuth}
           className="p-4 disabled:cursor-not-allowed"
           onClick={(e) => handleOpenEditDeleteBoardBtns(e)}
         >
@@ -189,14 +195,18 @@ export default function TopNavigation({
           </svg>
         </button>
       </div>
-      {isEditDeletBoardModal && (
-        <SubModal
-          handleEditModal={handleEditBoardModal}
-          handleDeletModal={handleDeletBoardModal}
-          firstTextBtn={"Edit Board"}
-          secondTextBtn={"Delete Board"}
-        />
-      )}
+      {isEditDeletBoardModal &&
+        createPortal(
+          <SubModal
+            ref={subModalRef}
+            firstTextBtn={"Edit Board"}
+            secondTextBtn={"Delete Board"}
+            handleEditModal={handleEditBoardModal}
+            handleDeletModal={handleDeletBoardModal}
+            setIsEditDeletBoardModal={setIsEditDeletBoardModal}
+          />,
+          document.body,
+        )}
     </div>
   );
 }

@@ -1,17 +1,23 @@
 "use client";
-import { MouseEvent, useContext, useLayoutEffect, useState } from "react";
-import { ModalContext, ModalTypes } from "../../contexts/ModalContextProvider";
-import SubModal from "./SubModal";
+import { useRef, useState, MouseEvent, useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { ColumnNames, TaskData } from "@/types/SharedTypes";
+import { v4 as uuidv4 } from "uuid";
+
 import api from "@/lib/api";
+
 import { useAppContext } from "@/contexts/AppContextProvider";
+import { ModalContext, ModalTypes } from "../../contexts/ModalContextProvider";
+
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
-import { limit } from "firebase/firestore";
+
+import SubModal from "./SubModal";
+
+import { ColumnNames, TaskData } from "@/types/SharedTypes";
 
 export default function MainChanges() {
-  const { curBoardId, curTaskId, setCurTaskId, currentColumnId } =
-    useAppContext();
+  const subModalRef = useRef(null);
+
+  const { curBoardId, curTaskId, setCurTaskId } = useAppContext();
   const { setClickTarget, setModalType, setIsModalOpen } =
     useContext(ModalContext);
 
@@ -20,6 +26,8 @@ export default function MainChanges() {
 
   const [isEditDeletBoardModal, setIsEditDeletBoardModal] = useState(false);
   const [isTaskStatusItemsShow, setIsTaskStatusItemsShow] = useState(false);
+
+  const [subtaskId, setSubtaskId] = useState([]);
 
   const {
     error: editError,
@@ -100,6 +108,7 @@ export default function MainChanges() {
     {
       onSuccess: (data) => {
         console.log("subtask mutated successfully", data);
+        setSubtaskId((prevState) => prevState?.filter((id) => id === data?.id));
         queryClient.invalidateQueries({ queryKey: ["task"] });
       },
       onError: (error) => {
@@ -146,13 +155,12 @@ export default function MainChanges() {
   };
 
   const handleCheckboxChange = (id: string) => {
+    setSubtaskId((prevState) => [...prevState, id]);
     subtaskMutate({
       userId: parsedUser?.userID,
       body: { subtask_id: id },
     });
   };
-
-  console.log(isTaskLoading, "isTaskLoading");
 
   return (
     <div className="relative">
@@ -188,21 +196,21 @@ export default function MainChanges() {
         className={
           isTaskLoading
             ? "h-6 w-full animate-pulse rounded-lg bg-slate-600"
-            : "my-6 max-h-52 overflow-scroll break-words text-xs text-kanbanLightGrey"
+            : "my-6 max-h-24 overflow-scroll break-words text-xs text-kanbanLightGrey md:max-h-52"
         }
       >
         {taskData?.description}
       </p>
-      <span className="text-xs font-bold text-kanbanLightGrey">
+      <span className="text-xs font-bold text-white">
         Subtasks ({taskData?.completed_subtasks} of {taskData?.subtasks?.length}
         )
       </span>
-      <ul className="max-h-52 overflow-scroll">
+      <ul className="max-h-24 overflow-scroll md:max-h-52">
         {isTaskLoading ? (
           <>
-            {Array?.from({ length: 3 })?.map((_, idx) => (
+            {Array?.from({ length: 3 })?.map((_) => (
               <li
-                key={idx}
+                key={uuidv4()}
                 className="my-2 flex animate-pulse flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 dark:bg-kanbanDarkGreyBG"
               >
                 <span className="rounded-lg bg-slate-600 p-2"></span>
@@ -214,20 +222,25 @@ export default function MainChanges() {
           <>
             {taskData?.subtasks?.map((subtask) => (
               <li
-                onClick={() => handleCheckboxChange(subtask?.id)}
                 key={subtask?.id}
-                className={`my-2 flex cursor-pointer flex-row items-center justify-start gap-2  rounded-md bg-kanbanLightGreyBG p-3 hover:bg-[#d8d7f1] dark:bg-kanbanDarkGreyBG dark:hover:bg-[#39395b]`}
+                onClick={() => handleCheckboxChange(subtask?.id)}
+                className={`my-2 flex cursor-pointer flex-row items-center justify-start gap-2 rounded-md bg-kanbanLightGreyBG p-3 hover:bg-[#d8d7f1] dark:bg-kanbanDarkGreyBG dark:hover:bg-[#39395b]`}
               >
                 <input
                   type="checkbox"
+                  disabled={
+                    subtaskId?.includes(subtask?.id) && subtaskIsLoading
+                  }
                   checked={subtask?.completed}
-                  // onChange={() => handleCheckboxChange(subtask?.id)}
+                  onChange={() => handleCheckboxChange(subtask?.id)}
                   className="accent-kanbanPurpule focus:accent-kanbanPurpuleHover"
                 />
                 <span
-                  className={`text-xs font-bold  ${subtask?.completed ? "text-kanbanLightGrey line-through dark:text-kanbanLightGrey" : "dark:text-white"}`}
+                  className={`max-w-[26rem] overflow-scroll text-xs font-bold ${subtask?.completed ? "text-kanbanLightGrey line-through dark:text-kanbanLightGrey" : "dark:text-white"}`}
                 >
-                  {subtask?.title}
+                  {subtaskId?.includes(subtask?.id) && subtaskIsLoading
+                    ? "loading..."
+                    : subtask?.title}
                 </span>
               </li>
             ))}
@@ -236,20 +249,23 @@ export default function MainChanges() {
       </ul>
 
       <div className="relative my-6 flex flex-col gap-2">
-        <span className="text-xs font-bold text-kanbanLightGrey">
-          Current Status
-        </span>
+        <span className="text-xs font-bold text-white">Current Status</span>
         {isColumnNamesLoading ? (
           <span className="w-full animate-pulse rounded-lg bg-slate-600 p-2"></span>
         ) : (
           <button
             type="button"
-            className="flex items-center justify-between rounded-md border border-kanbanLightGrey p-[0.44rem] text-left"
+            className="flex items-center justify-between truncate rounded-md border border-kanbanLightGrey p-[0.44rem] text-left"
             onClick={() => setIsTaskStatusItemsShow((prevState) => !prevState)}
           >
             {taskState?.current_status}
             {isTaskStatusItemsShow ? (
-              <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className=""
+                width="10"
+                height="7"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   stroke="#635FC7"
                   strokeWidth="2"
@@ -258,7 +274,12 @@ export default function MainChanges() {
                 />
               </svg>
             ) : (
-              <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className=""
+                width="10"
+                height="7"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   stroke="#635FC7"
                   strokeWidth="2"
@@ -271,10 +292,10 @@ export default function MainChanges() {
         )}
         {isTaskStatusItemsShow && (
           <ul
-            className={`absolute top-16 z-50 grid max-h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-white p-4 dark:bg-kanbanDarkGrey`}
+            className={`absolute top-16 z-50 grid max-h-44 w-full gap-2 overflow-y-scroll rounded-md bg-white p-4 dark:bg-kanbanDarkGrey md:max-w-[26rem]`}
           >
             {columnNames?.map((column) => (
-              <li key={column?.id}>
+              <li className="" key={column?.id}>
                 <button
                   type="button"
                   onClick={() => {
@@ -285,7 +306,7 @@ export default function MainChanges() {
                     setIsTaskStatusItemsShow(false);
                     handleConfirmClick(column?.column_name);
                   }}
-                  className="h-max w-full rounded-md p-[0.44rem]  px-4 text-left text-kanbanLightGrey hover:text-kanbanGrey dark:hover:text-kanbanLightGreyBG"
+                  className="h-max break-words rounded-md p-[0.44rem] px-4 text-left text-kanbanLightGrey hover:text-kanbanGrey dark:hover:text-kanbanLightGreyBG"
                 >
                   {column?.column_name}
                 </button>
@@ -296,10 +317,12 @@ export default function MainChanges() {
       </div>
       {isEditDeletBoardModal && (
         <SubModal
+          ref={subModalRef}
           firstTextBtn={"Edit Task"}
           secondTextBtn={"Delete Task"}
           handleEditModal={handleEditTaskModal}
           handleDeletModal={handleDeletTaskModal}
+          setIsEditDeletBoardModal={setIsEditDeletBoardModal}
         />
       )}
     </div>

@@ -36,7 +36,7 @@ const getBoards = async (userId: string) => {
 
 const findeBoard = async (userId: string, boardId: string) => {
   const response = await axiosFetch.get(`/board/${userId}/${boardId}`);
-  return response.data;
+  return response.data?.board;
 };
 
 const getBoardNames = async (userId: string) => {

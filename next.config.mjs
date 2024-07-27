@@ -1,13 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   publicRuntimeConfig: {
-    // Define your environment variables here
-    API_KEY: process.env.NEXT_PUBLIC_API_KEY,
-    API_AUTH: process.env.NEXT_PUBLIC_API_AUTH,
+    FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    AUTH_DOMAIN: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+    PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
+    STORAGE_BUCKET: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+    APP_ID: process.env.NEXT_PUBLIC_APP_ID,
+    MEASUREMENT_ID: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
+    MESSAGINGSENDER_ID: process.env.NEXT_PUBLIC_MESSAGINGSENDER_ID,
   },
   env: {
-    API_KEY: process.env.NEXT_PUBLIC_API_KEY,
-    API_AUTH: process.env.NEXT_PUBLIC_API_AUTH,
+    FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    AUTH_DOMAIN: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+    PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
+    STORAGE_BUCKET: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+    APP_ID: process.env.NEXT_PUBLIC_APP_ID,
+    MEASUREMENT_ID: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
+    MESSAGINGSENDER_ID: process.env.NEXT_PUBLIC_MESSAGINGSENDER_ID,
   },
   images: {
     remotePatterns: [

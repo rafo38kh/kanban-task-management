@@ -16,14 +16,11 @@ This is a solution to the [Entertainment web app Challenge on Frontend Mentor](h
 
 ### The challenge
 
-View the optimal layout for the app depending on their device's screen size
-
-- See hover states for all interactive elements on the page
-- Navigate between Home, Movies, TV Series, and Bookmarked Shows pages
-- Add/Remove bookmarks from all movies and TV series
-- Search for relevant shows on all pages
-- **Bonus**: Build this project as a full-stack application
-- **Bonus**: If you're building a full-stack app, we provide authentication screen (sign-up/login) designs if you'd like to create an auth flow
+- Create, read, update, and delete tasks
+- Drag and drop tasks to reorder or move between columns
+- Responsive design for optimal use on both desktop and mobile devices
+- User authentication and authorization
+- Real-time updates with WebSockets
 
 ### Screenshot
 
@@ -31,7 +28,7 @@ View the optimal layout for the app depending on their device's screen size
 
 ### Links
 
-- Solution URL: [https://github.com/rafo38kh/entertainment-web-app](https://github.com/rafo38kh/entertainment-web-app)
+- Solution URL: [https://www.frontendmentor.io/challenges/kanban-task-management-web-app-wgQLt-HlbB](https://www.frontendmentor.io/challenges/kanban-task-management-web-app-wgQLt-HlbB)
 - Live Site URL: [https://kanban-task-management-one-lyart.vercel.app/](https://kanban-task-management-one-lyart.vercel.app/)
 
 ## My process

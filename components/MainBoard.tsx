@@ -33,7 +33,7 @@ export default function MainBoard({}: MainBoardProps) {
   });
 
   return (
-    <div className="overflow-hidden overflow-x-auto">
+    <div className="h-full overflow-hidden overflow-x-auto">
       {isAuth ? (
         <>
           {isBoardNameLoading ? <MainBoardLoading /> : <ColumnsList />}

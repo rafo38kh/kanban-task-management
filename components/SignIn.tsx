@@ -6,11 +6,11 @@ export default function SignIn() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="flex items-center justify-center gap-4">
-        <div className="flex flex-col items-center justify-center ">
+        <div className="flex flex-col items-center justify-center">
           <button
             type="button"
             onClick={signInWithGoogle}
-            className="w-20 rounded-full bg-white  p-2 dark:bg-kanbanDarkGrey"
+            className="w-20 rounded-full bg-white p-2 dark:bg-kanbanDarkGrey"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -38,11 +38,11 @@ export default function SignIn() {
           </button>
           <span className="text-xs font-bold text-kanbanLightGrey">google</span>
         </div>
-        <div className="flex flex-col items-center justify-center ">
+        <div className="flex flex-col items-center justify-center">
           <button
             onClick={signInWithGithub}
             type="button"
-            className="w-20 rounded-full bg-white  p-2 dark:bg-kanbanDarkGrey"
+            className="w-20 rounded-full bg-white p-2 dark:bg-kanbanDarkGrey"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@ export default function SignIn() {
           </button>
           <span className="text-xs font-bold text-kanbanLightGrey">github</span>
         </div>
-        <div className="flex flex-col items-center justify-center ">
+        <div className="flex flex-col items-center justify-center">
           <button
             type="button"
             className="w-20 rounded-full bg-white p-2 dark:bg-kanbanDarkGrey"

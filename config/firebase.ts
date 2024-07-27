@@ -3,13 +3,13 @@ import { getAuth, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBVDhf6QmKbFdWhM-1wGMGCnKxf4XWQjWg",
-  authDomain: "kanban-3834a.firebaseapp.com",
-  projectId: "kanban-3834a",
-  storageBucket: "kanban-3834a.appspot.com",
-  messagingSenderId: "1027396522153",
-  appId: "1:1027396522153:web:ee7d73e82115ca065199b8",
-  measurementId: "G-2GJER6EVNX",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDER_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -19,4 +19,3 @@ export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 
 googleProvider.setCustomParameters({ prompt: "select_account" });
-// githubProvider.setCustomParameters({ prompt: "select_account" });

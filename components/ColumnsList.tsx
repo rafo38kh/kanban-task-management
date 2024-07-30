@@ -28,7 +28,7 @@ export default function ColumnsList() {
     },
     onSuccess(data) {
       if (!isFirstLoad) {
-        setCurBoardId(data?.at(0).id);
+        // setCurBoardId(data?.at(0).id);
       }
     },
     onError: (error) => {
@@ -63,7 +63,7 @@ export default function ColumnsList() {
       <li className="flex h-full w-[17.5rem] items-center justify-center pr-4">
         <button
           type="button"
-          className="mt-auto h-[calc(100%_-_3.3rem)] w-[17.5rem] rounded-lg bg-kanbanVeryLightGrey font-bold text-kanbanLightGrey transition-all duration-200 hover:text-kanbanPurpule dark:bg-[#23242f]"
+          className="mt-auto h-[calc(100%_-_2.3rem)] w-[17.5rem] rounded-lg bg-kanbanVeryLightGrey font-bold text-kanbanLightGrey transition-all duration-200 hover:text-kanbanPurpule dark:bg-[#23242f]"
           onClick={handleAddNewBoard}
         >
           + New Column

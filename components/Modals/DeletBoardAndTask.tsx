@@ -27,7 +27,7 @@ export default function DeletBoardAndTask({
 }: ModalBoardInformationProps) {
   const parsedUser = useGetUsersInfo();
   const { setIsModalOpen } = useContext(ModalContext);
-  const { curBoardId, curTaskId } = useAppContext();
+  const { curBoardId, curTaskId, setCurBoardId } = useAppContext();
 
   const queryClient = useQueryClient();
 
@@ -48,7 +48,8 @@ export default function DeletBoardAndTask({
       {
         onSuccess: () => {
           setIsModalOpen(false);
-          queryClient.invalidateQueries({ queryKey: ["boardNames"] });
+          // queryClient.invalidateQueries({ queryKey: ["boardNames"] });
+          // setCurBoardId(data?.at(0).id);
         },
         onError: (error) => {
           console.error(

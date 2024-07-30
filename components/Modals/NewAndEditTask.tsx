@@ -302,7 +302,7 @@ export default function NewAndEditTask({
         </button>
         {isTaskStatusItemsShow && (
           <ul
-            className={`absolute top-16 z-50 grid h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-white p-4 dark:bg-kanbanDarkGrey`}
+            className={`absolute top-16 z-50 grid max-h-44 w-full max-w-[26rem] gap-2 overflow-y-scroll rounded-md bg-white p-4 dark:bg-kanbanDarkGrey`}
           >
             {columnNames?.map((column) => (
               <li key={column?.id}>

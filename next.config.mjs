@@ -27,7 +27,7 @@ const nextConfig = {
         pathname: "/t/p/**",
       },
     ],
-    domains: ["lh3.googleusercontent.com"],
+    domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com"],
   },
 };
 

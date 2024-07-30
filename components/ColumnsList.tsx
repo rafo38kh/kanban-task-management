@@ -28,7 +28,7 @@ export default function ColumnsList() {
     },
     onSuccess(data) {
       if (!isFirstLoad) {
-        // setCurBoardId(data?.at(0).id);
+        setCurBoardId(data?.at(0).id);
       }
     },
     onError: (error) => {

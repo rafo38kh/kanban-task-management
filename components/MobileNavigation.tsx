@@ -108,49 +108,54 @@ export default function MobileNavigation() {
         + Create New Board
       </button>
 
-      <div className="mt-6 flex w-full items-center justify-between rounded-lg bg-kanbanVeryLightGrey p-4 py-2 dark:bg-kanbanDarkGreyBG md:hidden">
-        <div className="flex flex-row items-center justify-center gap-2">
-          <div className="aspect-square w-8 overflow-hidden rounded-full lg:flex">
-            {parsedUser?.profilePhoto && (
-              <Image
-                height={100}
-                width={100}
-                alt="Picture of the author"
-                src={parsedUser?.profilePhoto}
-              />
-            )}
+      {isAuth && (
+        <div className="mt-6 flex w-full items-center justify-between rounded-lg bg-kanbanVeryLightGrey p-4 py-2 dark:bg-kanbanDarkGreyBG md:hidden">
+          <div className="flex flex-row items-center justify-center gap-2">
+            <div className="aspect-square w-8 overflow-hidden rounded-full lg:flex">
+              {parsedUser?.profilePhoto && (
+                <Image
+                  height={100}
+                  width={100}
+                  alt="Picture of the author"
+                  src={parsedUser?.profilePhoto}
+                />
+              )}
+            </div>
+            <span className="text-xs font-bold text-kanbanLightGrey">
+              {parsedUser?.name}
+            </span>
           </div>
-          <span className="text-xs font-bold text-kanbanLightGrey">
-            {parsedUser?.name}
-          </span>
-        </div>
-        <button
-          onClick={logOut}
-          className="flex items-center justify-center gap-2 whitespace-nowrap stroke-kanbanLightGrey text-xs text-kanbanLightGrey transition-all duration-200 hover:stroke-black hover:text-black dark:hover:stroke-white dark:hover:text-white"
-        >
-          Logout
-          <svg
-            fill="none"
-            height="24"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
+          <button
+            onClick={() => {
+              logOut();
+              setIsSideBarShow(false);
+            }}
+            className="flex items-center justify-center gap-2 whitespace-nowrap stroke-kanbanLightGrey text-xs text-kanbanLightGrey transition-all duration-200 hover:stroke-black hover:text-black dark:hover:stroke-white dark:hover:text-white"
           >
-            <path
-              d="M15 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H15"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-            />
-            <path
-              d="M19 12L15 8M19 12L15 16M19 12H9"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-            />
-          </svg>
-        </button>
-      </div>
+            Logout
+            <svg
+              fill="none"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H15"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
+              <path
+                d="M19 12L15 8M19 12L15 16M19 12H9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
+            </svg>
+          </button>
+        </div>
+      )}
 
       <div className="w-full rounded-lg bg-kanbanVeryLightGrey px-6 py-2 text-center dark:bg-kanbanDarkGreyBG">
         <SwitchTheme />

@@ -29,7 +29,7 @@ This is a solution to the [Entertainment web app Challenge on Frontend Mentor](h
 ### Links
 
 - Solution URL: [https://www.frontendmentor.io/challenges/kanban-task-management-web-app-wgQLt-HlbB](https://www.frontendmentor.io/challenges/kanban-task-management-web-app-wgQLt-HlbB)
-- Live Site URL: [https://kanban-task-management-git-main-rafo38khs-projects.vercel.app/](https://kanban-task-management-git-main-rafo38khs-projects.vercel.app/)
+- Live Site URL: [https://kanban-task-management-rafokh.vercel.app/](https://kanban-task-management-rafokh.vercel.app/)
 
 ## My process
 
